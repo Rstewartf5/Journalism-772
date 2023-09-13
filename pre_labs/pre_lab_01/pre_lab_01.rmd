@@ -37,7 +37,7 @@ The library function loads an R library such as the tidyverse, providing access 
 
 ### Task 1: The console
 
-**Task** In the console (look below), type 2+2 and hit enter. What does it return? Type your answer below. **Answer:**
+**Task** In the console (look below), type 2+2 and hit enter. What does it return? Type your answer below. **Answer:** 4
 
 ### Task 2: Variables
 
@@ -113,7 +113,7 @@ In the space below, write the data type for the "id" column and the "seats" colu
 head(umd_courses)
 ```
 
-In the space below, write the name of the business from the first row of the "name" column. **Answer**
+In the space below, write the name of the business from the first row of the "name" column. **Answer** I do not see a black arrow on the right side of the output table, nor do I see any reference to business after running the above code. 
 
 ### Task 8: Explore data with interactive dataframe
 
@@ -137,7 +137,7 @@ umd_courses |>
 
 Describe what you think each line of this code is doing below, based on the result:
 
-**Answer** It is listing the term and displaying how many courses are offered in each term. 
+**Answer** It is listing the term, year and moth, and displaying how many courses are offered in each term. 
 
 ### Task 10: Adding arrange to sort the data
 
@@ -169,7 +169,7 @@ umd_courses |>
 
 Compared to the previous codeblock, how did the output change and what in the code changed it?
 
-**Answer**
+**Answer** compared to the previous codeblock the output now shows the term, followed by the department followed by the number of classes. I think it is showing all of the classes per time in descending order based on the number of classes offered. So among all of the data Business and Management in the fall of 2022 offered the most number of classes. 
 
 ### Task 12: Other summary functions
 
@@ -185,7 +185,7 @@ umd_courses |>
   arrange(desc(count_classes))
 ```
 
-Compared to the previous codeblock, what has changed and how did that affect the result? **Answer**
+Compared to the previous codeblock, what has changed and how did that affect the result? **Answer** I no longer see the department, I see the term so year and month followed by a column indicating the number of classes offered in the term, followed by the number of seats in a class. The data is organized largest to smallest based on the number of classes offered. 
 
 ### Task 13: different kinds of summarizations
 
@@ -203,7 +203,7 @@ umd_courses |>
   arrange(desc(total_seats))
 ```
 
-Compared to the previous codeblock, what has changed and how did that affect the result? What do the top terms have in common? **Answer**
+Compared to the previous codeblock, what has changed and how did that affect the result? What do the top terms have in common? **Answer** compared with the previous code block we now have a column for the average number of seats and a column for the median number of seats in every term organized in descending order by the term with the greatest number of classes offered. The top terms both take place in the fall. 
 
 ### Task 14: more aggregations
 
@@ -225,7 +225,7 @@ umd_courses |>
 
 Compared to the previous codeblock, what has changed and how did that affect the result? How is the data sorted?
 
-**Answer**
+**Answer** Well, I can clearly see the department is now listed, and I know that the table is arranged in descending order by the number of total seats. The data is completely different, and I have no idea what happened. I think I'm looking at the total seats, total classes offered, and the average number of seats offered per class in each department. I'm very lost. 
 
 ### Task 12: Questions
 
@@ -233,8 +233,9 @@ No code here; I want you to provide three questions that this data suggests to y
 
 **Answer**
 
-1.  
+1.  What I don't know is if there were any classes offered that had no seats available. 
 
-2.  
+2.  In 2023 only which department offered the most courses?
 
-3.  
+3.  Which department does the best job of filling in a professor's name for the offered courses. 
+
