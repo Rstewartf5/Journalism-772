@@ -380,4 +380,4 @@ Now that you have seen how to use mutate, filtering and dates, give me three que
 
 2.  If I only wanted to know about the term, department, and professor I would select those categories for my data analysis, eliminating other columns from my data. 
 
-3.  Some titles in the titel column have portions of the title in all caps. I would make them all uniform by using the str_to_title mutation to mutate the titles so they are all uniform. 
+3.  Some titles in the title column have portions of the title in all caps. I would make them all uniform by using the str_to_title mutation to mutate the titles so they are all uniform. 
