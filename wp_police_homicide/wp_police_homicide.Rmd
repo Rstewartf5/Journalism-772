@@ -51,7 +51,8 @@ baltimore_homicide <- read_csv("data/homicide-data.csv") |>
   filter(city=='Baltimore')
 
 ```
-####"As Baltimore has seen a stunning surge of violence, with nearly a killing each day for the past three years in a city of 600,000, homicide arrests have plummeted."
+####"As Baltimore has seen a stunning surge of violence, with nearly a killing each day for the past three years in a city of 600,000, homicide arrests have plummeted." (A killing each day for three straight years = 1,095 killings)
+
 ```{r}
 #Here we are calculating the # of homicides in the past 3 years, 2015, 2016, and 2017 to assess the previous statement.
  baltimore_homicide |>
