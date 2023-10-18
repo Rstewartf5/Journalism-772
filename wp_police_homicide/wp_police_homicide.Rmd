@@ -56,13 +56,10 @@ mutate(
   )
 ```
 
-
-```
-
 ```{r}
-#creating a variable to filter the data for Baltimore city alone
-baltimore_homicide <- homicide_data |>
-  filter(city=='Baltimore')
+#creating a dataframe for all homicides in Baltimore 
+baltimore_homicide <- yearly_homicide_data |>
+  filter(city == 'Baltimore')
 
 ```
 
@@ -70,13 +67,13 @@ baltimore_homicide <- homicide_data |>
 ####"As Baltimore has seen a stunning surge of violence, with nearly a killing each day for the past three years in a city of 600,000, homicide arrests have plummeted." (A killing each day for three straight years = 1,095 killings)
 
 ```{r}
-#Here we are calculating the # of homicides in the past 3 years, 2015, 2016, and 2017 to assess the previous statement.
+#Here we are calculating the # of homicides per year. 
  baltimore_homicide |>
- filter(reported_date > '2014-12-31')|>
-  summarise(count_deaths =n())
-
+  group_by(reported_year)|>
+  summarise(count_homicides =n())|>
+  arrange(reported_year)
 ```
-### total deaths over the past 3 years was 1002. That is almost 1095 (a killing each day)
+### total deaths over the past 3 years (2015, 2016, and 2017) was 1002 (342+320+340) . That is almost 1095 (a killing each day)
 
 ```{r}
 #checking the number of homicides divided by the number of days in the past 3 years. 
@@ -86,10 +83,10 @@ baltimore_homicide <- homicide_data |>
 ###Context: Washington Post writes "...homicide arrests have plummeted. City police made an arrest in 41 percent of homicides in 2014; last year, the rate was just 27 percent, a 14 percentage point drop." We want to check this fact with the following code blocks. First we will check to see if the above mentioned arrest rates are correct. Then we will check to see if arrest rates have fallen since over the past three years (2015, 2016, and 2017). 
 
 ```{r}
-###calculating the number of homicides in 2014
+###calculating the number of homicides in 2014, 2015, 2016, and 2017
 baltimore_homicide|>
-  filter(reported_date >'2013-12-31')|>
-  filter(reported_date <'2015-01-01')|>
+  filter(reported_year >= '2014')|> 
+  group_by(reported_year)|>
   summarise(count_homicides =n())
 
 ```
@@ -97,9 +94,9 @@ baltimore_homicide|>
 ```{r}
 #counting the number of arrests made that closed open homicide cases in 2014. 
 baltimore_homicide|>
-  filter(reported_date > '2013-12-31')|>
-  filter(reported_date < '2015-01-01')|>
+  filter(reported_year >= '2014')|>
   filter(disposition == 'Closed by arrest')|>
+  group_by(reported_year)|>
   summarise(count_arrests = n())
 ```
 ###There were 86 homicide cases closed by arrest in 2014. 
@@ -192,148 +189,44 @@ baltimore_homicide|>
 
 ###We have reviewed the data and found that, yes Baltimore had a arrest rate in 2014 of roughly 41% is correct. Arrest rates plummetted in the three years mentioned -2015, 2016, 2017 - with arrest rates at 25%, 23%, and 27% respectively. 
 
----
-title: "question_3_checkpoint_2.Rmd"
-author: "Bridget Shaela Robert Sydney"
-date: "2023-10-013"
-output: html_document
----
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-```{r cars}
-summary(cars)
-```
-## Including Plots
-
-You can also embed plots, for example:
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
 ```{r}
-# turn off sci notation
-options(scipen=999)
-#load libraries
-library(tidyverse)
-library(lubridate)
-library(refinr)
-
+#creating a dataframe that calculates homicides per city in 2014 
+city_homicide_2014 <- yearly_homicide_data |>
+  filter(reported_year == '2014')|>
+  group_by(city)|>
+   summarise(count_homicides = n())|>
+  arrange(desc(count_homicides))
 ```
 
 ```{r}
-read_csv("data/homicide-data.csv")
-
-```
-
-###Question 3: Of 50 of the nation’s largest cities, Baltimore is one of 34 where police now make homicide arrests less often than in 2014, according to a Washington Post analysis.
-
-
-###Data for 2014-
-
-```{r} 
-#Here we are calculating the number of homicides in Baltimore in 2014
-baltimore_homicide |> 
-  filter(str_detect(reported_date, "2014")) |> 
-  group_by(city) |> 
-  summarize(count_city = n()) |> 
-  arrange(desc(count_city))
-
+#creating a dataframe that calculate closed by arrest per city in 2014
+city_closed_2014 <- yearly_homicide_data |>
+  filter(reported_year == '2014')|>
+  group_by(city) |>
+  summarise(cases_closed = n()) |>
+  arrange(desc(cases_closed))
 ```
 
 ```{r}
-#Here we are calculating the number of homicides in Baltimore in 2014 that were open and had no arrest
-baltimore_homicide |> 
-  filter(str_detect(disposition, "Open/No arrest")) |> 
-  filter(str_detect(reported_date, "2014")) |> 
-  group_by(city) |> 
-  summarize(count_city = n()) |> 
-  arrange(desc(count_city))
+#creating a dataframe that calculates homicides per city in 2017
+city_homicide_2017 <- yearly_homicide_data|>
+  filter(reported_year == '2017')|>
+  group_by(city)|>
+  summarise(count_homicides = n())|>
+  arrange(desc(count_homicides))
+
 
 ```
 
 
 ```{r}
-#Here we are calculating the number of homicides in Baltimore in 2014 that were closed and had no arrest
-baltimore_homicide |> 
-  filter(str_detect(disposition, "Closed without arrest")) |> 
-  filter(str_detect(reported_date, "2014")) |> 
-  group_by(city) |> 
-  summarize(count_city = n()) |> 
-  arrange(desc(count_city))
-
+#creating a dataframe that calculates cases closed by arrest per city in 2017 
+city_closed_2017 <- yearly_homicide_data |>
+  filter(reported_year == '2017')|>
+  group_by(city)|>
+  summarise(cases_closed =n())|>
+  arrange(desc(cases_closed))
 ```
 
 
-math:
-```{r}
-#Here we are finding the percent of no arrests in both closed and open cases in 2014
-13+112
 
-(125/211)*100
-```
-125 non arrests in 2014 out of 211 homicides, 59.24% no arrest
-
-Data for 2017-
-
-```{r}
-#Here we are calculating the number of homicides in Baltimore in 2017
-baltimore_homicide |> 
-  filter(str_detect(reported_date, "2017")) |> 
-  group_by(city) |> 
-  summarize(count_city = n()) |> 
-  arrange(desc(count_city))
-
-```
-
-
-```{r}
-#Here we are calculating the number of homicides in Baltimore in 2017 that were open and had no arrest
-baltimore_homicide|> 
-  filter(str_detect(disposition, "Open/No arrest")) |> 
-  filter(str_detect(reported_date, "2017")) |> 
-  group_by(city) |> 
-  summarize(count_city = n()) |> 
-  arrange(desc(count_city))
-
-```
-
-```{r}
-#Here we are calculating the number of homicides in Baltimore in 2017 that were closed and had no arrest
-baltimore_homicide |> 
-  filter(str_detect(disposition, "Closed without arrest")) |> 
-  filter(str_detect(reported_date, "2017")) |> 
-  group_by(city) |> 
-  summarize(count_city = n()) |> 
-  arrange(desc(count_city))
-
-```
-
-math:
-```{r}
-#Here we are finding the percent of no arrests in both closed and open cases in 2017
-11+236
-
-(247/340)*100
-```
-
-247 non arrests in 2017 out of 340 homicides, 72.65% no arrest
-
-Answer: We can confirm that Baltimore makes less arrests in 2017 than in 2014.
-
-###Part of the answer still requires that we create a list of the 50 cities examined and rank them from lowest to highest in terms of homicide arrests. Doing this would validate that Baltimore is one of the 34 cities in which homicide arrests are less frequent now than in 2014. We will need to seek out guidance next week on the best way to make that happen. 
-
-
-
-```{r}
-#creating a data fram for homicides in 2014
-homicide_data|>
-  filter(reported_date >= '2014-01-01')
-
-
-```
