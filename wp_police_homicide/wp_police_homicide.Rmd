@@ -174,5 +174,59 @@ city_closed_2017 <- yearly_homicide_data |>
   arrange(desc(cases_closed))
 ```
 
+```{r}
+#here we're creating a new dataframe that joins the data frames showing homicides in 2014 and the homicide cases closed by arrest in 2014
+
+arrest_rate_2014 <-city_homicide_2014|> left_join(city_closed_2014, join_by(city))|>
+  mutate(arrest_rate = (cases_closed/count_homicides)*100) |>
+           arrange(arrest_rate)
+
+```
+
+#The above function allows us to see arrest rates in all the cities in 2014. Now we need to see all the arrest rates in 2017 to see if the arrest rates in 34 cities plummeted from 2014 to 2017, and if Baltimore was among those cities. 
+
+```{r}
+arrest_rate_2017 <-city_homicide_2017|> left_join(city_closed_2017, join_by(city))|>
+  mutate(arrest_rate = (cases_closed/count_homicides)*100) |>
+           arrange(arrest_rate)
+```
 
 
+```{r}
+all_arrest_rates <-
+  arrest_rate_2014|> left_join(arrest_rate_2017, join_by(city))
+
+```
+
+#The 4th statement we need to check is: "And while most cities saw their arrest rates drop gradually, Baltimore’s decline was sudden — plummeting 15 percentage points in 2015." While we already know Baltimore's arrest rates for 2015, we don't know the arrest rates for the rest of the cities. Let's calculate that
+
+```{r}
+#create a dataframe for all homicides per city in 2015
+city_homicide_2015 <- yearly_homicide_data|>
+  filter(reported_year == '2015')|>
+  group_by(city)|>
+  summarise(count_homicides = n())|>
+  arrange(desc(count_homicides))
+```
+
+```{r}
+#now we need a dataframe for all the closed by arrests for homicides in 2015
+city_closed_2015 <- yearly_homicide_data |>
+  filter(reported_year == '2015')|>
+  filter(disposition == "Closed by arrest")|>
+  group_by(city)|>
+  summarise(cases_closed =n())|>
+  arrange(desc(cases_closed))
+```
+
+```{r}
+#now we are going to join the two dataframes and create a new column called arrest rate to show arrest rates for 2015 for all cities. 
+arrest_rate_2015 <-city_homicide_2015|> left_join(city_closed_2015, join_by(city))|>
+  mutate(arrest_rate = (cases_closed/count_homicides)*100) |>
+           arrange(arrest_rate)
+```
+
+```{r}
+#now to see how the rate in which arrest rates changed 
+
+```
