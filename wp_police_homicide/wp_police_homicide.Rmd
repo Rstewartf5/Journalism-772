@@ -17,17 +17,13 @@ options(scipen=999)
 library(tidyverse)
 library(lubridate)
 library(refinr)
-
+library(janitor)
 ```
 
 ```{r}
 homicide_data<-read_csv("data/homicide-data.csv")
 ```
-```{r}
-###this code is to get an overview of the data in the data frame
-summary(homicide_data)
-colnames(homicide_data)
-```
+
 ```{r}
 #the reported_date is a number. We will use lubridate to turn it into a date. 
 homicide_data <- homicide_data|>
@@ -42,12 +38,13 @@ mutate(reported_year = year(reported_date)
       )
 ```
 
-###The first two statements from the Washington Post article that we are reverse engineering are related to Baltimore data alone. So, we will create a dataframe for homicides in Baltimore and proceed from there. 
+## Statement 1: As Baltimore has seen a stunning surge of violence, with nearly a killing each day for the past three years in a city of 600,000, homicide arrests have plummeted. 
+
+Step 1: filtering to have a data set with only Baltimore in it.
 ```{r}
 #creating a dataframe for all homicides in Baltimore 
-baltimore_homicide <- yearly_homicide_data |>
+baltimore <- yearly_homicide_data |>
   filter(city == 'Baltimore')
-
 ```
 
 
@@ -55,96 +52,102 @@ baltimore_homicide <- yearly_homicide_data |>
 
 ###Reverse Engineering: We can verify this statement by asking, does the data show that there has been nearly a killing per day. A killing each day for three straight years = 1,095 killings)
 
+Step 2: Calculating # of homicides per year
+
 ```{r}
 #Here we are calculating the # of homicides per year. 
- baltimore_homicide |>
+ baltimore |>
   group_by(reported_year)|>
   summarise(count_homicides =n())|>
   arrange(reported_year)
 ```
-### Answer: total deaths over the past 3 years (2015, 2016, and 2017) was 1002 (342+320+340) . That is almost 1095 (a killing each day)
+### Answer: total deaths over the past three years (2015, 2016, and 2017) was 1002 (342+320+340) . That is almost 1095 (a killing each day)
 
 ```{r}
 #checking the number of homicides divided by the number of days in the past 3 years. 
 1002/(365*3)
 
 ```
-###Context: Washington Post writes "...homicide arrests have plummeted. City police made an arrest in 41 percent of homicides in 2014; last year, the rate was just 27 percent, a 14 percentage point drop."
+##Statement 2: City police made an arrest in 41 percent of homicides in 2014; last year, the rate was just 27 percent, a 14 percentage point drop.
 
-##Reverse engineering: We want to check this fact with the following code blocks. First we will check to see if the above mentioned arrest rates are correct. Then we will check to see if arrest rates have fallen over the past three years (2015, 2016, and 2017). 
+Step 1: Finding homicides in 2014
+Answer: 211 Homicides in Baltimore in 2014
 
 ```{r}
 ###calculating the number of homicides in 2014, 2015, 2016, and 2017
-baltimore_homicide|>
+baltimore|>
   filter(reported_year >= '2014')|> 
   group_by(reported_year)|>
   summarise(count_homicides =n())
 
 ```
-###Answer: there were 211 homicides in Baltimore in 2014. 
+
+Step 2: Finding number of arrests made in homicide cases in 2014
+Answer: 86
 ```{r}
 #counting the number of arrests made that closed homicide cases in 2014. 
-baltimore_homicide|>
+baltimore |>
   filter(reported_year >= '2014')|>
   filter(disposition == 'Closed by arrest')|>
   group_by(reported_year)|>
   summarise(count_arrests = n())
 ```
-###There were 86 homicide cases closed by arrest in 2014. 
 
+Step 3: Divide total arrests by total homicides
 ```{r}
-#dividing total arrests by total homicides
 86/211
 
 ```
-###Answer: The Washington Post correctly calculated the arrest rate for homicides in the city of Baltimore in 2014 as 40.75 or roughly 41%. Now lets calcualte the arrest rate for homicides in 2017. Was it really 27% as mentioned in the Washington Post article? 
+Answer: The Washington Post correctly calculated the arrest rate for homicides in the city of Baltimore in 2014 as 40.75 or roughly 41%.
 
+Now lets calcualte the arrest rate for homicides in 2017. Was it really 27% as mentioned in the Washington Post article? 
 
-###Answer:There were 340 homicides in Baltimore in 2017 and 93 homicide cases closed by arrest. 
+Step 1: Diving total arrests by total homicides for 2017. Referencing the previous data.
+
+Answer: It's correct the arrest rate was 27.35 or roughly 27%. 
 
 ```{r}
 #dividing total arrests by total homicides
 93/340
 ```
-###Answer: Yes, the arrest rate for homicides in Baltimore in 2017 was 27.35 or roughly 27%. 
+ 
 
 
-##Now we want to see if homicide arrest rates plumeted over 2015 and 2016 as well. So we will calculate those. We know that in 2015 there were 342 homicides and 87 cases closed by arrest. 
+##Now we want to see if homicide arrest rates plumeted over 2015 and 2016 as well. 
 
+Step 1: Calculate 2015 using data from previous coding. 
+Answer: 25.4%
 ```{r}
-#We will calculate the rate of homicide cases closed by arrest for 2015
 87/342
-
 ```
-###Answer: Arrest rate for 2015 was 25.4%
 
-##We also already know that there were 320 homicides in 2016 and 72 of those were closed by arrest. 
+
+Step 2: Calculating 2016
+Answer: 23% which is lower than the homicide arrest rate in 2014.  
 ```{r}
-#counting total homicides in 2016
 72/320
 ```
 
-###Anser: the arrest rate in 2016 was roughly 23%. That is lower than 2014's homicide arrest rate. 
 
 ### Reverse engineering answer: We have reviewed the data and found that, yes Baltimore had a arrest rate in 2014 of roughly 41% is correct. Arrest rates plummetted in the three years mentioned -2015, 2016, 2017 - with arrest rates at 25%, 23%, and 27% respectively. 
 
 
-###The next statement we are examining. "Of 50 of the nation’s largest cities, Baltimore is one of 34 where police now make homicide arrests less often than in 2014, according to a Washington Post analysis." 
+##Statement 3: Of 50 of the nation’s largest cities, Baltimore is one of 34 where police now make homicide arrests less often than in 2014, according to a Washington Post analysis.
 
-##Reverse Engineering: We need to figure out are there 34 cities that make homicide arrests lass now (2017) than in 2014. We already know that Baltimore makes less homicide arrests. We solved that in our 2nd reverse engineering question. So, let's figure out how many other cities 
+Step 1: Create data frame that calculates homicides per city in 2014
 
 ```{r}
 #creating a dataframe that calculates homicides per city in 2014 
-city_homicide_2014 <- yearly_homicide_data |>
+homicide_city_2014 <- yearly_homicide_data |>
   filter(reported_year == '2014')|>
   group_by(city)|>
    summarise(count_homicides = n())|>
   arrange(desc(count_homicides))
 ```
+Step 2: Creating data frame that has homicides arrest per city in 2014
 
 ```{r}
-#creating a dataframe that calculate closed by arrest per city in 2014
-city_closed_2014 <- yearly_homicide_data |>
+arrest_2014 <- yearly_homicide_data |>
   filter(reported_year == '2014')|>
   filter(disposition == "Closed by arrest")|>
   group_by(city) |>
@@ -152,21 +155,20 @@ city_closed_2014 <- yearly_homicide_data |>
   arrange(desc(cases_closed))
 ```
 
+Step 3: Creating data frame with homicides per city in 2017
+
 ```{r}
-#creating a dataframe that calculates homicides per city in 2017
-city_homicide_2017 <- yearly_homicide_data|>
+homicide_2017 <- yearly_homicide_data|>
   filter(reported_year == '2017')|>
   group_by(city)|>
   summarise(count_homicides = n())|>
   arrange(desc(count_homicides))
 
-
 ```
-
+Step 4: Creating data frame that has closed by arrest per city in 2017
 
 ```{r}
-#creating a dataframe that calculates cases closed by arrest per city in 2017 
-city_closed_2017 <- yearly_homicide_data |>
+arrest_2017 <- yearly_homicide_data |>
   filter(reported_year == '2017')|>
   filter(disposition == "Closed by arrest")|>
   group_by(city)|>
@@ -174,23 +176,25 @@ city_closed_2017 <- yearly_homicide_data |>
   arrange(desc(cases_closed))
 ```
 
+Step 5: Joining the dataframes from 2014
 ```{r}
 #here we're creating a new dataframe that joins the data frames showing homicides in 2014 and the homicide cases closed by arrest in 2014
 
-arrest_rate_2014 <-city_homicide_2014|> left_join(city_closed_2014, join_by(city))|>
+arrest_rate_2014 <-homicide_city_2014|> left_join(arrest_2014, join_by(city))|>
   mutate(arrest_rate = (cases_closed/count_homicides)*100) |>
            arrange(arrest_rate)
 
 ```
 
-#The above function allows us to see arrest rates in all the cities in 2014. Now we need to see all the arrest rates in 2017 to see if the arrest rates in 34 cities plummeted from 2014 to 2017, and if Baltimore was among those cities. 
+Step 6: Joining the 2017 data frames
 
 ```{r}
-arrest_rate_2017 <-city_homicide_2017|> left_join(city_closed_2017, join_by(city))|>
+arrest_rate_2017 <-homicide_2017|> left_join(arrest_2017, join_by(city))|>
   mutate(arrest_rate = (cases_closed/count_homicides)*100) |>
            arrange(arrest_rate)
 ```
 
+Step 7: Combine the 2014 + 2017 data to compare the arrest rates and see if there are 
 
 ```{r}
 all_arrest_rates <-
@@ -198,66 +202,75 @@ all_arrest_rates <-
 
 ```
 
-#The 4th statement we need to check is: "And while most cities saw their arrest rates drop gradually, Baltimore’s decline was sudden — plummeting 15 percentage points in 2015." While we already know Baltimore's arrest rates for 2015, we don't know the arrest rates for the rest of the cities. Let's calculate that
+Answer: We can confirm that there are 34 cities, including Baltimore who's arrest rates decreased from 2014 to 2017. 
+## Statement 4: And while most cities saw their arrest rates drop gradually, Baltimore’s decline was sudden — plummeting 15 percentage points in 2015, after Gray’s death, the largest single-year drop for any city already solving less than half its homicides.
+
+Step 1: Create data frame for all homicides per city in 2015
 
 ```{r}
-#create a dataframe for all homicides per city in 2015
-city_homicide_2015 <- yearly_homicide_data|>
-  filter(reported_year == '2015')|>
-  group_by(city)|>
-  summarise(count_homicides = n())|>
-  arrange(desc(count_homicides))
+#create a dataframe for all homicides per city since 2014
+city_homicide_2015 <- yearly_homicide_data |>
+  filter(reported_year == '2015') |>
+  group_by(city) |>
+  summarise (homicides = n()) |>
+  arrange(desc(homicides))
+
 ```
 
+Step 2: Step 2: Create data frame for all homicide cases closed by arrest in 2015.
 ```{r}
-#now we need a dataframe for all the closed by arrests for homicides in 2015
 city_closed_2015 <- yearly_homicide_data |>
-  filter(reported_year == '2015')|>
-  filter(disposition == "Closed by arrest")|>
-  group_by(city)|>
-  summarise(cases_closed =n())|>
+  filter(reported_year == '2015') |>
+  filter(disposition == "Closed by arrest") |>
+  group_by(city) |>
+  summarise(cases_closed=n()) |>
   arrange(desc(cases_closed))
 ```
 
+Step 3: Join the data frames and create a column called "arrest rate" to display the arrest rate in 2015 for all cities
 ```{r}
-#now we are going to join the two dataframes and create a new column called arrest rate to show arrest rates for 2015 for all cities. 
-arrest_rate_2015 <-city_homicide_2015|> left_join(city_closed_2015, join_by(city))|>
-  mutate(arrest_rate = (cases_closed/count_homicides)*100) |>
-           arrange(arrest_rate)
+arrest_rate_2015 <- city_homicide_2015 |> left_join(city_closed_2015, join_by(city)) |>
+  mutate(arrest_rate = (cases_closed/homicides)*100) 
 ```
 
+Step 4: Now let's compare them to previous years
 ```{r}
-#now to see how the rate in which arrest rates changed 
-
+arrest_rate_change <- arrest_rate_2014 |> left_join(arrest_rate_2015, join_by(city)) |>
+  rename(total_homicides_2014 = count_homicides, closed_cases_2014 = cases_closed.x, arrest_rate_2014 = arrest_rate.x, total_homicides_2017 = homicides, closed_cases_2017 = cases_closed.y, arrest_rate_2017 = arrest_rate.y)
 ```
+
+Step 5: Subtract arrest rate of 2014 to 2015
+```{r}
+40-25
+```
+Answer: We can prove that arrest rates in Baltimore dropped by 15 percentage points following the death of Freddie Gray. 
+
 
 ##Statement 5: For most of the decade before 2015, Baltimore’s annual homicide arrest rate hovered at about 40 percent. 
 
 Step 1: We already have a dataframe that has filtered for Baltimore "balitmore_homicide." So, we will use that data frame to create a new data frame to show the number of homicides in Baltimore from 2007-2014
-```{r}
-seven_year_baltimore_homicide<-baltimore_homicide|>
-  filter(reported_year < '2015')|>
-  group_by(reported_year)|>
-  summarise(count_homicides =n())
 
+
+##Statement 5: For most of the decade before 2015, Baltimore’s annual homicide arrest rate hovered at about 40 percent. 
+
+Step 1: Create new data frame to show number of homicides in Baltimore from 2007-2014. We already have a data frame with the Baltimore homicide data, so now we're filtering to look at a specific time period. 
+```{r}
+seven_year_baltimore_homicide <- baltimore |>
+  filter(reported_year < '2015') |>
+  group_by(reported_year) |>
+  summarise (count_homicides = n())
 ```
-
+Step 2: Create data frame for seven years of homicide arrests
 ```{r}
-#Step 2: Now we are creating a dataframe for seven years of homicide arrests
-seven_year_baltimore_arrests<-baltimore_homicide|>
-  filter(reported_year < '2015')|>
-  filter(disposition == "Closed by arrest")|>
-  group_by(reported_year)|>
-  summarise(count_arrest =n())
+seven_year_baltimore_arrest <- baltimore |>
+  filter(reported_year < '2015') |>
+  filter(disposition == "Closed by arrest") |>
+  group_by(reported_year) |>
+  summarise(count_arrest=n())
 ```
-
-
-
+Step 3: Join the two data frames and create a column with the arrest rate
 ```{r}
-#Step 3: Now we are joining those two dataframes and creating a column with the arrest rate. 
-seven_year_baltimore_homicide_arrests <-
-  seven_year_baltimore_homicide |> left_join(seven_year_baltimore_arrests, join_by(reported_year))|>
+seven_year_baltimore_homicide_arrests <- seven_year_baltimore_homicide |> left_join(seven_year_baltimore_arrest, join_by(reported_year)) |>
   mutate(seven_year_arrest_rate = (count_arrest/count_homicides)*100)
 ```
-
-##Answer: Glancing at the dataframe "seven_year_baltimore_homicide_arrests" we can see that the arrest rate from 2007-2014 hovered around 40%. 
+Answer: After completing the data, we can confirm that the average arrest rate from 2007-2014 hovered around 40%.
