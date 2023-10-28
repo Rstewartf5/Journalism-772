@@ -47,11 +47,6 @@ baltimore <- yearly_homicide_data |>
   filter(city == 'Baltimore')
 ```
 
-
-#### Statement number 1: "As Baltimore has seen a stunning surge of violence, with nearly a killing each day for the past three years in a city of 600,000, homicide arrests have plummeted" 
-
-###Reverse Engineering: We can verify this statement by asking, does the data show that there has been nearly a killing per day. A killing each day for three straight years = 1,095 killings)
-
 Step 2: Calculating # of homicides per year
 
 ```{r}
