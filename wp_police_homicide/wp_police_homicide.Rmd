@@ -230,3 +230,34 @@ arrest_rate_2015 <-city_homicide_2015|> left_join(city_closed_2015, join_by(city
 #now to see how the rate in which arrest rates changed 
 
 ```
+
+##Statement 5: For most of the decade before 2015, Baltimore’s annual homicide arrest rate hovered at about 40 percent. 
+
+Step 1: We already have a dataframe that has filtered for Baltimore "balitmore_homicide." So, we will use that data frame to create a new data frame to show the number of homicides in Baltimore from 2007-2014
+```{r}
+seven_year_baltimore_homicide<-baltimore_homicide|>
+  filter(reported_year < '2015')|>
+  group_by(reported_year)|>
+  summarise(count_homicides =n())
+
+```
+
+```{r}
+#Step 2: Now we are creating a dataframe for seven years of homicide arrests
+seven_year_baltimore_arrests<-baltimore_homicide|>
+  filter(reported_year < '2015')|>
+  filter(disposition == "Closed by arrest")|>
+  group_by(reported_year)|>
+  summarise(count_arrest =n())
+```
+
+
+
+```{r}
+#Step 3: Now we are joining those two dataframes and creating a column with the arrest rate. 
+seven_year_baltimore_homicide_arrests <-
+  seven_year_baltimore_homicide |> left_join(seven_year_baltimore_arrests, join_by(reported_year))|>
+  mutate(seven_year_arrest_rate = (count_arrest/count_homicides)*100)
+```
+
+##Answer: Glancing at the dataframe "seven_year_baltimore_homicide_arrests" we can see that the arrest rate from 2007-2014 hovered around 40%. 
