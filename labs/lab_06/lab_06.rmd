@@ -1,0 +1,144 @@
+---
+title: "lab_06"
+author: "derek willis"
+date: "2023-10-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load libraries and establish settings
+
+```{r}
+# Turn off scientific notation
+options(scipen=999)
+
+# load your libraries
+library(tidyverse)
+library(lubridate)
+library(janitor)
+```
+
+## Getting Started
+
+This week we'll be combining and joining data to make it more useful and to ask some questions about it. We'll use some more 911 overdose call data to do this. The first thing we want to do is to combine multiple counties' data into a single dataframe so that we can ask some questions. First, let's combine data from Cecil, Carroll and Allegany counties into a new dataframe.
+
+*Before* you combine them you'll need to clean up some of the column names to make the data easier to work with - make sure you have loaded the library to do that. You also need to make sure that each column has the same name and datatype (you can check the datatypes using `glimpse`). If any of them does not, you need to fix that.
+
+```{r}
+# load and combine the call data from those three counties
+overdose_calls_allegany <- read_csv("data/allegany_911.csv")
+overdose_calls_cecil <- read_csv("data/cecil_911.csv")
+overdose_calls_carroll <- read_csv("data/carroll_911.csv")|> rename(location = Location) |> rename(date = Date)
+```
+
+```{r}
+# combining the three dataframes into one
+county_overdoses <- bind_rows(list(overdose_calls_allegany, overdose_calls_carroll, overdose_calls_cecil))
+```
+
+
+Then we'll join some demographic data with Baltimore City 911 calls and ask some questions of that. For that, you'll need to load the Baltimore City 911 data and the ZCTA demographic data from the data folder, and join them based on the zip code. Remember, the zip codes in both dataframes must be the same datatype (and should be characters). You should start with your Baltimore City 911 dataframe in creating your join.
+
+```{r}
+# load and join the Baltimore-related data
+overdose_calls_baltimore <- read_csv("data/baltimore_911.csv")
+zipcode_data <- read_csv ("data/maryland_zcta.csv")
+```
+
+```{r}
+# change zip codes from number to character format
+zipcode_data <- zipcode_data |> mutate(ZCTA5N = as.character(ZCTA5N))
+overdose_calls_baltimore <- overdose_calls_baltimore|> mutate(zip_code = as.character(zip_code))
+zipcode_data <- zipcode_data |>rename(zip_code = ZCTA5N)
+```
+```{r}
+#joining two dataframes by "zip_code"
+overdose_by_zip <- overdose_calls_baltimore |> left_join(zipcode_data, join_by("zip_code"))
+```
+## Answer questions
+
+Q1. Let's start with our data from Allegany, Cecil and Carroll counties. Write code to generate a dataframe that shows the total number of calls for each county. What's the order of counties from most calls to least?
+
+A1.Carroll County had the most calls of the three counties we looked at, followed by Cecil County. Allegany County had the least. 
+
+```{r}
+calls_per_county <-county_overdoses |>
+  group_by(county)|>
+  summarise(total_calls = n())|>
+  arrange(desc(total_calls))
+```
+
+Q2. In your combined dataframe that you used in A1, add a column for the month of each call, then write code to show the total number of calls per county and month. Are there any outliers or noteworthy results? Describe the general pattern of the results.
+
+#Describing Results: The general pattern is that there aren't too many dramatic outliers. The lowest number of calls per county per month was in Allegany County. It's not surprising because we already knew Allegany county had the lowest number of calls, generally. 
+
+Then calculate the most calls per county and location. Which location had the most calls - where and what is that location?
+
+A2.The most calls are from Bracebridge Hall, 314 Grove neck Rd. It is an inpatient drug and alcohol rehab center. 
+
+```{r}
+mounthly_county_overdoses <- county_overdoses |>
+  mutate(month =month(date))|>
+  count(month,county)
+```
+
+```{r}
+county_overdoses |>
+  group_by(location, county)|>
+  summarise(count_calls =n())|>
+  arrange(desc(count_calls))
+
+
+```
+###Q3. Let's turn to the Baltimore City data. You're interested in exploring calls in zip codes with a high percentage of children under 18. Write code to isolate calls in zip codes where the percentage of under 18 population is at least 75% and then show the zip code and population and how many calls occurred in each of those zip codes.
+
+```{r}
+under18_overdose <-overdose_by_zip|>
+  filter(PCT_UNDER_18 >"75.0")|>
+  group_by(zip_code, POPULATION)|>
+  summarise(total_calls = n())|>
+  arrange(desc(total_calls))
+head(under18_overdose)
+```
+
+#Where are those zip codes in the city?
+
+21217 has the most calls in Baltimore. It also has the highest population. 
+
+Add a column to your code that calculates the number of calls per 1,000 people for those zip codes. To calculate a per capita rate, you might find this short guide handy: [https://observablehq.com/\@palewire/per-capita-calculator](https://observablehq.com/@palewire/per-capita-calculator){.uri}.
+
+
+```{r}
+#creating a dataframe that has overdose calls in high-under 18 zipcodes
+under18_overdose|>
+  mutate(per_capita = (total_calls/POPULATION)*1000)
+```
+Which zip code has the highest rate of calls per 1,000 people? Find the neighborhoods in that zip code that are listed in the data - you can use group_by or distinct to do this. What are some of those neighborhoods, and what else can you tell me about the population there?
+
+
+A3.21217 has the highest rate of calls per 1000 people with 20.86 calls per 1000 people. The two neighborhoods with the highest populations of under 18 people that have the highest 911 calls for overdoses are in Penn North and Sandtwon. What I can tell you about the population there, is that you can drive down the street in those neighborhood at 7:00 am on a Sunday morning and see a surprisingly significant number of people sprawled out on the sidewalks or walking around, presumably on drugs or alcohol or both. It's giving a very similar vibe to skidrow in Los Angeles. 
+
+```{r}
+overdose_by_zip |>
+  filter(PCT_UNDER_18 >"75.0")|>
+  group_by(zip_code,neighborhood,POPULATION)|>
+  summarise(total_calls = n())|>
+  arrange(desc(total_calls))
+
+```
+
+Q4. Choose your own adventure: I want you to come up with a question you could ask of the Baltimore City data that combines both the calls and the demographic information. You must use both demographics and the overdose call data in your work.
+
+The question I would like to answer is does home ownership play a role in drug overdose calls. In otherwords, how do neighborhoods with higher rates of homeownership relate to overdose calls, if it does at all?
+
+A4:I don't know if homeownership is related to overdose calls. It seems more complicated. Stadium area has very low % of homeownership, but its also a commercial area not a residential. Perkins Homes neighborhood has roughly the same % of homeownership as Sandtown, but it has only one 911 overdose call coming from there. I believe that area probably has a very low population - the projects there were torn down. So, yeah...more complicated than the code I was able to write. 
+
+```{r}
+overdose_by_zip|>
+  group_by(neighborhood, PCT_HOMEOWNER)|>
+  summarise(total_calls = n())|>
+  arrange(desc(total_calls))
+```
