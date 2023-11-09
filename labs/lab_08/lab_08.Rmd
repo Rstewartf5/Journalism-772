@@ -1,0 +1,197 @@
+---
+title: "lab_08"
+author: "derek willis"
+date: "2023-04-03"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load libraries and establish settings
+
+**Task** Create a codeblock and load appropriate packages and settings for this lab. We'll be making some charts, working with dates and retrieving Census data.
+
+```{r}
+library(tidyverse)
+library(tidycensus)
+library(janitor)
+
+
+```
+
+
+## Load and modify data
+
+**Task** Create a codeblock and load the following data from the data folder:
+
+* Prince George's County 911 Overdose Calls
+
+You will need to create columns for the date, week and month based on the existing `datetime` column.
+
+```{r}
+pg_overdose <- read_csv("data/prince_georges_2022_overdoses.csv")
+```
+
+```{r}
+pg_overdose <-pg_overdose|>
+  mutate(month = month(datetime, label=TRUE)) |> 
+  mutate(week = week(datetime))
+
+```
+
+```{r}
+pg_monthly_overdose <-pg_overdose|>
+  group_by(month)|>
+  summarise(total_calls = n())|>
+  arrange(desc(total_calls))
+
+```
+
+```{r}
+pg_monthly_percent <- pg_monthly_overdose|>
+  mutate(percent_calls = total_calls/sum(total_calls )*100)
+```
+## Questions 
+
+**Q1.** Which month saw the greatest percentage of total calls? Create a dataframe that calculates the percentage of all calls that each month's calls represents. Make a bar chart from that dataframe. Your bar chart must have:
+
+* A clear title that states the main idea/finding
+* Good labels for the x & y axis and a caption for the source, which is Prince George's County EMS.
+* Readable bars - the values shouldn't be overlapping
+
+```{r}
+pg_monthly_percent|>
+  ggplot() +
+  geom_bar(aes(x=month, weight=percent_calls)) +
+  theme_minimal() +
+   labs(
+    title="Months with the Most Overdoses",
+    x = "month",
+    y = "rate of calls",
+    caption = "source: Prince George's County EMS"
+    
+  )
+
+```
+
+Compare the results here to those from the pre_lab_08 bar chart - are there major differences in the months with the highest and lowest figures? Describe that below.
+
+**A1.** 
+
+December was the month that saw the greatest percentage of total calls. 
+
+Compared to the bar chart from pre-lab-08 the major difference in the months that I noticed were that there were higher rate of overdose calls in Prince George's County during November and December. In Baltimore County we noticed a spike in calls during the warmer months. August and Mary were had the highest number of overdoses in the Baltimore County data. 
+
+```{r}
+pg_weekly_overdose <- pg_overdose|>
+  group_by(week)|>
+  summarise(total_calls =n())|>
+  arrange(desc(total_calls))
+```
+
+```{r}
+pg_weekly_overdose |>
+  ggplot()+
+  geom_line(aes(x=week, y=total_calls)) +
+  labs(
+    title="When Prince Georgians overdosed in 2022",
+    x = "week number",
+    y = "rate of calls",
+    caption = "source: Prince George's County EMS"
+  )+
+   scale_x_continuous(breaks = my_breaks)
+ 
+
+```
+**Q2.** Let's visualize this data on a weekly basis using a line chart. As in Q1, generate a dataframe with the total number of calls for each week, and then create a line chart to show the distribution of calls over time. Your line chart must have:
+
+* A clear title that states the main idea/finding
+* Good labels for the x & y axis and a caption for the source, which is Prince George's County EMS.
+* Readable labels
+
+
+Describe the pattern of results; you may want to look at the data to dig into particular outliers.
+
+**A2.** In general it looks like Prince Georgians call 911 for overdoses between 20 and 30 times a week in 2022.There are two noticeable spikes and one large drop in calls in 2022. The first in week 28, the week of July 11, when overdose calls spiked to more than 40 calls in that week. The largest drop, was in the last week of the year, when less than 5 people called 911 due to overdoses. In the news during the week of 11 July in Prince George's county there were massive power outages that lasted several days due to a storm and impacted thousands of residents. I wonder if the two incidents are related. 
+
+
+```{r}
+```
+
+**Q3.**  A scatterplot is a type of chart that helps us see relationships between two variables. One variable goes on the x axis, the other on the y axis.  For each row/observation in our data, a scatterplot puts a circle (or a "point") where the two variables intersect on a grid. 
+
+Statisticians use scatterplots to show graphically whether one variable is correlated -- related, in a statistical sense -- with another variable.  A classic example is the [relationship between ice cream sales and temperature](https://www.mathsisfun.com/data/scatter-xy-plots.html). The scatterplot below -- press play to load the image -- shows that relationship, that an increase in temperature is associated with an increase in ice cream sales. When it's 12C, sales are 200 dollars, and when it's hotter, 25C, sales are 600 dollars.
+
+```{r}
+knitr::include_graphics("https://www.mathsisfun.com/data/images/scatter-ice-cream1.svg")
+```
+
+We're going to use a scatterplot a little differently, to get a visual sense of two key variables: 
+
+Our question is: does the median income in a zip code have any relationship to the number of overdose 911 calls in that zip code?
+
+To answer this question, do the following:
+
+1. Generate a dataframe with the number of 911 calls for each zip code.
+
+```{r}
+#generate dataframe with number of 911 calls for each zip code
+calls_by_zip <- pg_overdose |>
+  group_by(zipcode)|>
+  summarise(total = n())
+  
+glimpse(calls_by_zip)
+
+```
+2. Get data from the Census Bureau showing median household income for Maryland zip codes.
+
+```{r}
+marylnd_median_income <- get_acs(geography = "zcta", variables = "B19013_001", year = 2021)|>
+  rename(zipcode = GEOID)
+
+```
+3. Join those two dataframes on their zip code columns, starting with the 911 calls dataframe.
+
+```{r}
+overdose_and_income <- calls_by_zip |> inner_join(marylnd_median_income)
+
+```
+4. Make a scatterplot showing the total calls and median income. I didn't show you how to do this, so look it up! Googling "ggplot scatterplot" is a good start.
+
+```{r}
+oi_scatter = overdose_and_income|>
+  rename(income = estimate)
+```
+5. Give it an appropriate title, source, and x and y axis titles.
+
+```{r}
+oi_scatter|>
+  ggplot() +
+  geom_point(
+    mapping = aes(x=total, y= income),
+  color= "darkblue",
+  fill = "lightpink",
+  shape = 21,
+  size= 3, 
+  alpha = 0.5)+
+ 
+  labs(
+    title="How income impacts overdoses in Prince George's County",
+    x = "number of 911 calls",
+    y = "annual household income",
+    caption = "source: Prince George's County EMS and American Community Survey"
+  ) +
+  theme_bw()
+
+
+```
+6. Add a label for each point that shows the zip code using geom_text() - see some examples of its use at https://ggplot2.tidyverse.org/reference/geom_text.html#ref-examples. Try to make the names as easy to read as possible by avoiding overlap.
+
+***I could not figure out how to successfully label the chart in time. ***
+
+7. In the answer space below, describe what you see and answer the questions posed above. In a general sense, what do you think this means? Feel free to consider the actual raw values: how would you report out the main point(s) of this chart?
+
+**A3.**  
+You do see what appears to be a general trend of zipcodes with lower median incomes having more 911 calls for overdose. None of the zip codes with higher median incomes (over $100,000 ), for example have, have more than 60 overdose calls per year. But I think it might be better to calculate rate of overdose per 1000 people, because some of the areas with lower overdose numbers are less densley populated. 20904, for example had only one overdose call, but the majority of that zipcode is in Montgomery County and only a tiny portion of it is in Prince George's County (https://planning.maryland.gov/MSDC/Documents/zipcode_map/2010/prinzc10.pdf). If I wanted to understand which zip codes in Prince George's County have the largest number of overdose calls, I could do that without the ACS data. But if I wanted to know if median income in a zip code impacts the number of overdose calls, I think calculating per 1000 would be more practical. 
