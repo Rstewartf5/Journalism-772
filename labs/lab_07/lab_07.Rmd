@@ -138,3 +138,12 @@ mutate(minimum_population = (low_estimate+population))
 
 ```
 
+
+```{r}
+pg_municipalities <-get_acs(geography = "place"), 
+                  variables = c(total_population = "B00001_001"), 
+                  state = "MD",
+                  year = 2021) 
+
+```
+}
