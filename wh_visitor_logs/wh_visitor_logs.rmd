@@ -17,6 +17,7 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 #loading libraries
 library(tidyverse)
 library(janitor)
+library(lubridate)
 ```
 
 ```{r}
@@ -43,7 +44,10 @@ wh_records_jul23 <- read_csv("data/wh_records_jul_2023.csv")
 
 
 ```{r}
-#cleaning the data part one
+#we found three groups of inconsistencies in the header rows of the imported csv files. So, we are cleaning up those inconsistencies in three different batches. 
+
+#cleaning records part 1
+
 c_wh_records_jan22 <- wh_records_jan22 |> rename(first_name = NAMEFIRST, last_name = NAMELAST, middle_initial = NAMEMID, appointment_made_date = APPT_MADE_DATE, appointment_start_date = APPT_START_DATE, appointment_end_date = APPT_END_DATE, appointment_cancel_date = APPT_CANCEL_DATE, last_updated_by = LAST_UPDATEDBY, last_entry_date = LASTENTRYDATE,  visitee_last_name = VISITEE_NAMELAST, visitee_first_name = VISITEE_NAMEFIRST, meeting_location = MEETING_LOC, caller_last_name = CALLER_NAME_LAST,  caller_first_name = CALLER_NAME_FIRST, release_date = RELEASEDATE)|>
   clean_names()
 
@@ -107,6 +111,42 @@ c_wh_records_jul23 <- wh_records_jul23 |> clean_names()
 wh_records_combined <- bind_rows(list(c_wh_records_jan22, c_wh_records_feb22, c_wh_records_mar22, c_wh_records_apr22, c_wh_records_may22, c_wh_records_jun22, c_wh_records_jul22, c_wh_records_aug22, c_wh_records_sep22, c_wh_records_oct22, c_wh_records_nov22, c_wh_records_dec22, c_wh_records_jan23, c_wh_records_feb23, c_wh_records_mar23, c_wh_records_apr23, c_wh_records_may23, c_wh_records_jun23, c_wh_records_jul23))
 
 wh_records_combined
+```
+
+```{r}
+#creating a column for visitor name that combines first name with last name and middle initial, creating a column of visitee name, and getting rid of unnecessary columns: the x28 and x29 columns that were only in the march 2022 data, caller_room, release_date)
+
+wh_records_combined_names <- wh_records_combined |> mutate(full_names_visitor = paste(first_name, middle_initial, last_name, sep = '_'),
+                              full_names_visitee = paste(visitee_first_name, visitee_last_name, sep = '_'))|>
+  select(-x28, -x29,-caller_room, -release_date)
+```
+
+
+```{r}
+#cleaning up the dates
+wh_records_combined_dates_and_names <- wh_records_combined_names|>
+  mutate(appointment_start_date_cln = mdy_hm(appointment_start_date), 
+         appointment_end_date_cln = mdy_hm(appointment_end_date),
+         appointment_cancel_date_cln = mdy_hm(appointment_cancel_date), 
+         last_entry_date_cln = mdy_hm(last_entry_date),
+         appointment_made_date_cln = mdy_hm(appointment_made_date), 
+         toa_cln= mdy_hm(toa))
 
 ```
+
+
+***Discussion*** 
+Flaws and limitations hindering us answering our questions: after cleaning up the data, we believe we will be able to answer question 1 regarding who visited the white house most in 2022 and 2023. 
+
+We also believe we will be able to answer question 2 - who is visited most often - by looking at the most frequently listed visitees. 
+
+We can also look at what percentage of the visits are to the POTUS (president) or even to the FLOTUS (first lady)
+
+For which time of day, day of the week, etc. is busiest, we could toa data, however there are several NAs in that column. So any findings we make will have to be caveated by that. Also, the date and time are combined in one column, we may need to look into how we can split those. 
+
+Question 5 - the average length of appointment is UNATAINABLE. While time of arrival (toa) is recorded, time of departure (tod) is not. Appointment end date is always 11:59 the day of the appointment. The data will not allow us to determine length of appointments. 
+
+Question 6 - how frequently does house or senate leadership visit the WH? A better question is what percentage of the logged visits are from leaders of the house or senate. We haven't thoroughly investigated this question yet, but we believe that we could create a list of names of high-ranking leadership: speaker of the house, minority whip, etc., and write a code using string detect and mutate to create a column that will be marked as yes if the entry is from a member of the house/senate leadership, and no if it is not. 
+
+Additional note: cleaning up the dates, particularly in the appointment_start_date column. We believe this is because the dates are characters and some are written with the hour and minute format and others are not. Not sure if this is something that can be resolved by using open refine? 
 
