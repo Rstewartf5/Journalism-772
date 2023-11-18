@@ -1,0 +1,112 @@
+---
+title: "Untitled"
+author: "Bridget, Shaela, Sydney, Robert"
+date: "2023-11-18"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+```{r}
+#loading libraries
+library(tidyverse)
+library(janitor)
+```
+
+```{r}
+wh_records_jan22 <- read_csv("data/wh_records_jan_2022.csv")
+wh_records_feb22 <- read_csv("data/wh_records_feb_2022.csv")
+wh_records_mar22 <- read_csv("data/wh_records_mar_2022.csv")
+wh_records_apr22 <- read_csv("data/wh_records_apr_2022.csv")
+wh_records_may22 <- read_csv("data/wh_records_may_2022.csv")
+wh_records_jun22 <- read_csv("data/wh_records_jun_2022.csv")
+wh_records_jul22 <- read_csv("data/wh_records_jul_2022.csv")
+wh_records_aug22 <- read_csv("data/wh_records_aug_2022.csv")
+wh_records_sep22 <- read_csv("data/wh_records_sep_2022.csv")
+wh_records_oct22 <- read_csv("data/wh_records_oct_2022.csv")
+wh_records_nov22 <- read_csv("data/wh_records_nov_2022.csv")
+wh_records_dec22 <- read_csv("data/wh_records_dec_2022.csv")
+wh_records_jan23 <- read_csv("data/wh_records_jan_2023.csv")
+wh_records_feb23 <- read_csv("data/wh_records_feb_2023.csv")
+wh_records_mar23 <- read_csv("data/wh_records_mar_2023.csv")
+wh_records_apr23 <- read_csv("data/wh_records_apr_2023.csv")
+wh_records_may23 <- read_csv("data/wh_records_may_2023.csv")
+wh_records_jun23 <- read_csv("data/wh_records_jun_2023.csv")
+wh_records_jul23 <- read_csv("data/wh_records_jul_2023.csv")
+```
+
+
+```{r}
+#cleaning the data part one
+c_wh_records_jan22 <- wh_records_jan22 |> rename(first_name = NAMEFIRST, last_name = NAMELAST, middle_initial = NAMEMID, appointment_made_date = APPT_MADE_DATE, appointment_start_date = APPT_START_DATE, appointment_end_date = APPT_END_DATE, appointment_cancel_date = APPT_CANCEL_DATE, last_updated_by = LAST_UPDATEDBY, last_entry_date = LASTENTRYDATE,  visitee_last_name = VISITEE_NAMELAST, visitee_first_name = VISITEE_NAMEFIRST, meeting_location = MEETING_LOC, caller_last_name = CALLER_NAME_LAST,  caller_first_name = CALLER_NAME_FIRST, release_date = RELEASEDATE)|>
+  clean_names()
+
+c_wh_records_feb22 <- wh_records_feb22|>rename(first_name = NAMEFIRST, last_name = NAMELAST, middle_initial = NAMEMID, appointment_made_date = APPT_MADE_DATE, appointment_start_date = APPT_START_DATE, appointment_end_date = APPT_END_DATE, appointment_cancel_date = APPT_CANCEL_DATE, last_updated_by = LAST_UPDATEDBY, last_entry_date = LASTENTRYDATE,  visitee_last_name = VISITEE_NAMELAST, visitee_first_name = VISITEE_NAMEFIRST, meeting_location = MEETING_LOC, caller_last_name = CALLER_NAME_LAST,  caller_first_name = CALLER_NAME_FIRST, release_date = RELEASEDATE)|>
+  clean_names()
+
+c_wh_records_mar22 <- wh_records_mar22|>rename(first_name = NAMEFIRST, last_name = NAMELAST, middle_initial = NAMEMID, appointment_made_date = APPT_MADE_DATE, appointment_start_date = APPT_START_DATE, appointment_end_date = APPT_END_DATE, appointment_cancel_date = APPT_CANCEL_DATE, last_updated_by = LAST_UPDATEDBY, last_entry_date = LASTENTRYDATE,  visitee_last_name = VISITEE_NAMELAST, visitee_first_name = VISITEE_NAMEFIRST, meeting_location = MEETING_LOC, caller_last_name = CALLER_NAME_LAST,  caller_first_name = CALLER_NAME_FIRST, release_date = RELEASEDATE)|>
+  clean_names()
+
+c_wh_records_apr22<- wh_records_apr22 |>rename(first_name = NAMEFIRST, last_name = NAMELAST, middle_initial = NAMEMID, appointment_made_date = APPT_MADE_DATE, appointment_start_date = APPT_START_DATE, appointment_end_date = APPT_END_DATE, appointment_cancel_date = APPT_CANCEL_DATE, last_updated_by = LAST_UPDATEDBY, last_entry_date = LASTENTRYDATE,  visitee_last_name = VISITEE_NAMELAST, visitee_first_name = VISITEE_NAMEFIRST, meeting_location = MEETING_LOC, caller_last_name = CALLER_NAME_LAST,  caller_first_name = CALLER_NAME_FIRST, release_date = RELEASEDATE)|>
+  clean_names()
+
+c_wh_records_may22 <- wh_records_may22 |>rename(first_name = NAMEFIRST, last_name = NAMELAST, middle_initial = NAMEMID, appointment_made_date = APPT_MADE_DATE, appointment_start_date = APPT_START_DATE, appointment_end_date = APPT_END_DATE, appointment_cancel_date = APPT_CANCEL_DATE, last_updated_by = LAST_UPDATEDBY, last_entry_date = LASTENTRYDATE,  visitee_last_name = VISITEE_NAMELAST, visitee_first_name = VISITEE_NAMEFIRST, meeting_location = MEETING_LOC, caller_last_name = CALLER_NAME_LAST,  caller_first_name = CALLER_NAME_FIRST, release_date = RELEASEDATE)|>
+  clean_names()
+```
+
+```{r}
+#cleaning records part 2
+c_wh_records_jun22<- wh_records_jun22 |> rename(release_date = RELEASEDATE)|>
+  clean_names()
+
+c_wh_records_jul22 <-wh_records_jul22 |> rename(release_date = RELEASEDATE)|>
+  clean_names()
+
+c_wh_records_aug22 <-wh_records_aug22|> rename(release_date = RELEASEDATE)|>
+  clean_names()
+
+c_wh_records_sep22 <-wh_records_sep22|> rename(release_date = RELEASEDATE)|>
+  clean_names()
+
+c_wh_records_oct22 <-wh_records_oct22 |> rename(release_date = RELEASEDATE)|>
+  clean_names()
+
+c_wh_records_nov22 <-wh_records_nov22 |> rename(release_date = RELEASEDATE)|>
+  clean_names()
+
+c_wh_records_dec22 <-wh_records_dec22 |> rename(release_date = RELEASEDATE)|>
+  clean_names()
+
+c_wh_records_jan23 <-wh_records_jan23 |> rename(release_date = RELEASEDATE)|>
+  clean_names()
+
+c_wh_records_feb23 <-wh_records_feb23 |> rename(release_date = RELEASEDATE)|>
+  clean_names()
+
+```
+
+
+```{r}
+#cleaning part 3
+c_wh_records_mar23 <- wh_records_mar23 |> clean_names()
+c_wh_records_apr23 <- wh_records_apr23 |> clean_names()
+c_wh_records_may23 <- wh_records_may23 |> clean_names()
+c_wh_records_jun23 <- wh_records_jun23 |> clean_names()
+c_wh_records_jul23 <- wh_records_jul23 |> clean_names()
+
+```
+
+```{r}
+#binding rows of the cleaned dataframes
+wh_records_combined <- bind_rows(list(c_wh_records_jan22, c_wh_records_feb22, c_wh_records_mar22, c_wh_records_apr22, c_wh_records_may22, c_wh_records_jun22, c_wh_records_jul22, c_wh_records_aug22, c_wh_records_sep22, c_wh_records_oct22, c_wh_records_nov22, c_wh_records_dec22, c_wh_records_jan23, c_wh_records_feb23, c_wh_records_mar23, c_wh_records_apr23, c_wh_records_may23, c_wh_records_jun23, c_wh_records_jul23))
+
+wh_records_combined
+
+```
+

@@ -1,0 +1,198 @@
+---
+title: "md_hispanic_population"
+author: "Robert Stewart and April Quevedo"
+date: "2023-11-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+library(tidyverse)
+library(tidycensus)
+library(janitor)
+```
+
+```{r}
+#setting key
+census_api_key("a01180b6ecfc93e467a23a8b66d5dca6d8c5c5df", install = TRUE)
+```
+
+```{r}
+#loading summary file 1 dataset from the 2010 census
+
+v20 <- load_variables(2020, "acs5", cache = TRUE)
+View(v20)
+
+```
+
+```{r}
+#pulling up the ACS data for hispanic population per county in Maryland for 2015
+hispanic_2015<-get_acs(geography = "county",
+        variables = c(hispanic ="B01001I_001"),
+        state="MD",
+        year= 2015
+        )|>
+  rename(population_2015 = estimate)|>
+  clean_names()
+```
+```{r}
+#pulling up the ACS data for hispanic population per county in Maryland for 2016
+hispanic_2016<-get_acs(geography = "county",
+        variables = c(hispanic ="B01001I_001"),
+        state="MD",
+        year= 2016
+        )|>
+  rename(population_2016 = estimate)|>
+  clean_names()
+```
+```{r}
+#pulling up the ACS data for Hispanic population per county in Maryland for 2017
+hispanic_2017<-get_acs(geography = "county",
+        variables = c(hispanic ="B01001I_001"),
+        state="MD",
+        year= 2017
+        )|>
+  rename(population_2017 = estimate)|>
+  clean_names()
+```
+
+```{r}
+#pulling up the ACS data for Hispanic population per county in Maryland for 2018
+hispanic_2018<-get_acs(geography = "county",
+        variables = c(hispanic ="B01001I_001"),
+        state="MD",
+        year= 2018
+        )|>
+  rename(population_2018 = estimate)|>
+  clean_names()
+```
+
+```{r}
+#pulling up the ACS data for Hispanic population per county in Maryland for 2019
+hispanic_2019<-get_acs(geography = "county",
+        variables = c(hispanic ="B01001I_001"),
+        state="MD",
+        year= 2019
+        )|>
+  rename(population_2019 = estimate)|>
+  clean_names()
+```
+
+```{r}
+#pulling up the ACS data for Hispanic population per county in Maryland for 2010
+hispanic_2010<-get_acs(geography = "county",
+        variables = c(hispanic ="B01001I_001"),
+        state="MD",
+        year= 2010
+        )|>
+rename(population_2010 = estimate)|>
+  clean_names()
+```
+
+```{r}
+#pulling up the ACS data for Hispanic population per county in Maryland for 2011
+hispanic_2011<-get_acs(geography = "county",
+        variables = c(hispanic ="B01001I_001"),
+        state="MD",
+        year= 2011
+        )|>
+  rename(population_2011 = estimate)|>
+  clean_names()
+```
+
+```{r}
+#pulling up the ACS data for Hispanic population per county in Maryland for 2020
+hispanic_2020<-get_acs(geography = "county",
+        variables = c(hispanic ="B01001I_001"),
+        state="MD",
+        year= 2020
+        )|>
+  rename(population_2020 = estimate)|>
+  clean_names()
+
+```
+
+```{r}
+#pulling up the ACS data for Hispanic population per county in Maryland for 2021
+hispanic_2021<-get_acs(geography = "county",
+        variables = c(hispanic ="B01001I_001"),
+        state="MD",
+        year= 2021
+        )|>
+  rename(population_2021 = estimate)|>
+  clean_names()
+```
+
+```{r}
+#pulling up the ACS data for Hispanic population per county in Maryland for 2012
+hispanic_2012<-get_acs(geography = "county",
+        variables = c(hispanic ="B01001I_001"),
+        state="MD",
+        year= 2012
+        )|>
+  rename(population_2012 = estimate)|>
+  clean_names()
+```
+
+```{r}
+#pulling up the ACS data for Hispanic population per county in Maryland for 2013
+hispanic_2013<-get_acs(geography = "county",
+        variables = c(hispanic ="B01001I_001"),
+        state="MD",
+        year= 2013
+        )|>
+  rename(population_2013 = estimate)|>
+  clean_names()
+```
+
+```{r}
+#pulling up the ACS data for Hispanic population per county in Maryland for 2014
+hispanic_2014<-get_acs(geography = "county",
+        variables = c(hispanic ="B01001I_001"),
+        state="MD",
+        year= 2014
+        )|>
+  rename(population_2014 = estimate)|>
+  clean_names()
+```
+```{r}
+#joining county population data
+hispanic_since_2010 <- hispanic_2010 |>left_join(hispanic_2011, )|>
+  left_join(hispanic_2012)|>
+  left_join(hispanic_2013)|>
+  left_join(hispanic_2014)|>
+  left_join(hispanic_2015)|>
+  left_join(hispanic_2016)|>
+  left_join(hispanic_2017)|>
+  left_join(hispanic_2018)|>
+  left_join(hispanic_2019)|>
+  left_join(hispanic_2020)|>
+  left_join(hispanic_2021)|>
+  select(-moe, -variable)
+```
+
+```{r}
+#writing the new dataframe into a csv file
+write_csv(hispanic_since_2010, file = "data/maryland_hispanic_population.csv")
+
+```
+
+```{r}
+#pulling up ACS data for Hispanic population within the municipalities of PG county (note: to do this I asked chat GPI the following question: Write me a code for r that will allow me to pull up total hispanic population using the ACS for all municipalities in Prince George's County Maryland. I took out the geometry and the output variable, and added the year to the code recommended by chat GPT). 
+
+hispanic_pg_2018 <-get_acs(
+  geography = "cbsa", 
+  variables = c(hispanic ="B01001I_001"),
+  state = "MD",
+  year=2018
+)
+```
