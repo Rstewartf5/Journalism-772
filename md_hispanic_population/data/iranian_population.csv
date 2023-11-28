@@ -1,0 +1,53 @@
+GEOID,NAME,variable,estimate,moe
+01,Alabama,iranian_pop,1877,527
+02,Alaska,iranian_pop,574,274
+04,Arizona,iranian_pop,8282,1305
+05,Arkansas,iranian_pop,764,283
+06,California,iranian_pop,210128,6168
+08,Colorado,iranian_pop,6222,940
+09,Connecticut,iranian_pop,2663,592
+10,Delaware,iranian_pop,467,198
+11,District of Columbia,iranian_pop,2554,479
+12,Florida,iranian_pop,15291,1727
+13,Georgia,iranian_pop,10424,1236
+15,Hawaii,iranian_pop,872,279
+16,Idaho,iranian_pop,852,429
+17,Illinois,iranian_pop,11180,1226
+18,Indiana,iranian_pop,3303,721
+19,Iowa,iranian_pop,991,334
+20,Kansas,iranian_pop,2378,600
+21,Kentucky,iranian_pop,2232,526
+22,Louisiana,iranian_pop,1862,442
+23,Maine,iranian_pop,468,214
+24,Maryland,iranian_pop,16597,1451
+25,Massachusetts,iranian_pop,9287,1021
+26,Michigan,iranian_pop,4867,577
+27,Minnesota,iranian_pop,3002,554
+28,Mississippi,iranian_pop,835,382
+29,Missouri,iranian_pop,2464,515
+30,Montana,iranian_pop,402,195
+31,Nebraska,iranian_pop,662,214
+32,Nevada,iranian_pop,5812,1117
+33,New Hampshire,iranian_pop,626,213
+34,New Jersey,iranian_pop,7196,927
+35,New Mexico,iranian_pop,1542,446
+36,New York,iranian_pop,27722,1985
+37,North Carolina,iranian_pop,6205,924
+38,North Dakota,iranian_pop,316,153
+39,Ohio,iranian_pop,5495,869
+40,Oklahoma,iranian_pop,3990,630
+41,Oregon,iranian_pop,7011,1155
+42,Pennsylvania,iranian_pop,6950,874
+44,Rhode Island,iranian_pop,285,105
+45,South Carolina,iranian_pop,1882,508
+46,South Dakota,iranian_pop,113,80
+47,Tennessee,iranian_pop,4389,764
+48,Texas,iranian_pop,41925,3332
+49,Utah,iranian_pop,3370,783
+50,Vermont,iranian_pop,382,163
+51,Virginia,iranian_pop,19953,1383
+53,Washington,iranian_pop,14965,1796
+54,West Virginia,iranian_pop,807,331
+55,Wisconsin,iranian_pop,2061,434
+56,Wyoming,iranian_pop,178,116
+72,Puerto Rico,iranian_pop,138,132

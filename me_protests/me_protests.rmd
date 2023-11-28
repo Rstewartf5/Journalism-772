@@ -1,0 +1,61 @@
+---
+title: "Middle East Protests"
+author: "Robert"
+date: "2023-11-21"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+```{r}
+#load libraries 
+library(tidyverse)
+library(janitor)
+library (lubridate)
+```
+
+
+```{r}
+#read in CSV and clean names
+mid_east_protests <- read_csv("data/me_2015-2023_nov10.csv")
+
+mid_east_protests|>
+  clean_names()
+```
+
+```{r}
+#clean names and filter for Iran
+clean_mid_east <- mid_east_protests|>
+  clean_names()|>
+  filter(country == "Iran")
+```
+
+```{r}
+#turn dates into dates
+mid_east_dated_protests <- clean_mid_east |>
+  mutate(date_of_event = dmy(event_date))
+```
+
+```{r}
+iran_protest_peak <- mid_east_dated_protests|>
+  filter(between(date_of_event, as.Date('2022-09-16'), as.Date('2023-03-01')))
+```
+
+```{r}
+iran_protest_peak_minimized<-
+  iran_protest_peak|>
+  select(-event_id_cnty,-event_date, -time_precision, -disorder_type, -event_type, -sub_event_type, -actor1, -timestamp, -tags, -geo_precision, -iso, -region, -source, -source_scale, -inter1, -assoc_actor_2, -inter2, -actor2, -assoc_actor_2, -interaction, -civilian_targeting)|>
+  group_by(admin1)|>
+  summarise(total_protests =n())
+
+```
+
+```{r}
+write_csv(iran_protest_peak_minimized, file = "data/iran_protest_peak.csv")
+```
