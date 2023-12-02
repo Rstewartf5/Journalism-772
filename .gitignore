@@ -41,3 +41,5 @@ vignettes/*.pdf
 # DS Store
 .DS_Store
 *.DS_Store
+wh_visitor_logs/data/white_house_records.csv
+wh_visitor_logs/data/white_house_refined_csv.txt
