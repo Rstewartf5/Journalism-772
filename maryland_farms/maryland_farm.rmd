@@ -153,7 +153,9 @@ ggplot()+
 
 *Looking at the map you can see that the greatest increase in farmland is in Carroll, Frederick, and Washington counties. The greatest decrease of farmland appears to be in Prince George's and Baltimore counties.*
 
-**PITCH 1: Prince George's County has an interesting demographic profile in the state of Maryland. It's one of the counties with the largest population of African Americans and one of the counties with the fastest growing Hispanic communities in the state. Historic injustices such as segregation and redlining have taught us that  policies and practices in areas where minority groups live can have long lasting impacts on the well-being of people in those communities to include their perception of belonging. This pitch will explore the decrease in farms within Prince George's County. Which farms have left and what has the impact been on people living near the former farms? 
+**PITCH 1:**
+
+*Prince George's County has an interesting demographic profile in the state of Maryland. It's one of the counties with the largest population of African Americans and one of the counties with the fastest growing Hispanic communities in the state. Historic injustices such as segregation and redlining have taught us that  policies and practices in areas where minority groups live can have long lasting impacts on the well-being of people in those communities to include their perception of belonging. This pitch will explore the decrease in farms within Prince George's County. Which farms have left and what has the impact been on people living near the former farms?*
 
 
 **Now, I think it would be helpful to just have a visual showing where farmland has been increasing and where it's been decreasing. I will export the data to datawrapper to help me figure out what the trends look like**
