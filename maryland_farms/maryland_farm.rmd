@@ -155,7 +155,7 @@ ggplot()+
 
 **PITCH 1:**
 
-*Prince George's County has an interesting demographic profile in the state of Maryland. It's one of the counties with the largest population of African Americans and one of the counties with the fastest growing Hispanic communities in the state. Historic injustices such as segregation and redlining have taught us that  policies and practices in areas where minority groups live can have long lasting impacts on the well-being of people in those communities to include their perception of belonging. This pitch will explore the decrease in farms within Prince George's County. Which farms have left and what has the impact been on people living near the former farms?*
+*Prince George's County has an interesting demographic profile in the state of Maryland. It's one of the counties with the largest population of African Americans and one of the counties with the fastest growing Hispanic communities in the state. Historic injustices such as segregation and redlining have taught us that  policies and practices in areas where minority groups live can have long lasting impacts on the well-being of people in those communities to include their perception of belonging. This story will explore the decrease in farms within Prince George's County. I will identify a few farms that have left and explore the impact been on people living near the former farms*
 
 
 **Now, I think it would be helpful to just have a visual showing where farmland has been increasing and where it's been decreasing. I will export the data to datawrapper to help me figure out what the trends look like**
@@ -246,7 +246,7 @@ ggplot() +
 
 **PITCH 2**
 
-*The demand for locally grown food in the United States increased during the first decades of the 21st century compared to the last decade of the 20th, according to a report produced by the Federal Reserve Bank of St. Louis. Local farms can have a positive impact on the economy and they can strengthen local food systems. But industrial agriculture can also be detrimental to the environment and the health of communities near the farms. With the number of highly lucrative farms growing in certain zipcodes in central Maryland, my pitch is to examine the environmental repercussions of that change. Looking at the two zip codes with the greatest number of highly lucrative farms in central Maryland, I will talk with environmental experts to determine ways to check the impact of the farms on the environment.*
+*The demand for locally grown food in the United States increased during the first decades of the 21st century compared to the last decade of the 20th, according to a report produced by the Federal Reserve Bank of St. Louis. Local farms can have a positive impact on the economy and they can strengthen local food systems. But industrial agriculture can also be detrimental to the environment and the health of communities near the farms. With the number of highly lucrative farms growing in certain zip codes in central Maryland, this story will examine the environmental repercussions of that change. Looking at the two zip codes with the greatest number of highly lucrative farms in central Maryland, I will talk with environmental experts to determine ways to check the impact of the farms on the environment.*
 
 **PITCH 3 **
 
