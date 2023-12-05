@@ -19,17 +19,131 @@ When you click the **Knit** button a document will be generated that includes bo
 #loading libraries
 library(tidyverse)
 library(janitor)
+
+# adding geographic library for mapping
+library(sf)
+library(tigris)
+
+# adding census library data for comparison. 
+library(tidycensus)
 ```
 
 ```{r}
-#loading data
+#loading data on the change of farms
 maryland_farms <- read_csv("data/maryland_number_of_farms.csv")
 
 maryland_farms
 
+#loading data on changing farm acres in Maryland
 maryland_acres <- read_csv("data/maryland_acres.csv")
 
 maryland_acres
 
+```
+```{r}
+#loading geographic data to experiment with creating a map of the data.
+md_farms_zip <- st_read("data/md_zips/BNDY_ZIPCodes11Digit_MDP.shp")
+
+view(md_farms_zip)
+
+farm_counties <- counties()
+
+#narrowing county data to show just Maryland counties. 
+md_farms_county <-farm_counties|>
+  filter(STATEFP == "24")
+```
+
+```{r}
+#cleaning data 
+
+#cleaning MD farms
+maryland_farms_cleaned <- maryland_farms|>
+  rename(county = Jurisdiction)|>
+  clean_names()|>
+  select(-date_created)
+
+#clearning zipcode dataframe
+md_farms_county_cleaned <- md_farms_county|>
+  rename(county = NAMELSAD)|>
+  clean_names()
+
+```
+
+**I see that the number of farms in Maryland has increased but it has decreased in certain counties. I am going to pull in census data to see if there's any correlation between median income and the increase or decrease in farms**
+```{r}
+#pulling in acs
+
+md_acs <- get_acs(geography = "county",
+                  variables = c(medincome = "B19013_001"), 
+                  state = "MD", 
+                  year = 2020)|>
+  clean_names()
+
+```
+
+```{r}
+#cleaning the acs income data for merging
+md_acs_cleaned <- md_acs|>
+  mutate (county =(str_remove_all(name,", Maryland")))
+
+md_acs_renamed <- md_acs_cleaned |>
+  rename(medincome = estimate)
+
+#selecting desired columns
+md_acs_final <- md_acs_renamed |>
+  select(geoid,medincome,county)
+```
+
+**Now I would like to join the dataframes to make some charts and some maps**
+
+```{r}
+#joining the geo data with the counties and farms data
+maryland_counties_and_farms <-
+  md_farms_county_cleaned|>
+  left_join(maryland_farms_cleaned, join_by(county))
+```
+
+```{r}
+#joining geo-data and farm data with medincome dataframe
+md_farms_and_inccome <- maryland_counties_and_farms |>
+  left_join(md_acs_final, join_by(county))|>
+  select(-name, -geoid.y)
+
+glimpse(md_farms_and_inccome)
+
+```
+
+```{r}
+#changing some characters to numbers
+md_farms_and_inccome_v2 <- md_farms_and_inccome|>
+  mutate(change_all = as.numeric(change_in_number_of_farms_2002_2017), 
+         total_2002 = as.numeric(number_of_farms_2002),
+         total_2007 = as.numeric(number_of_farms_2007),
+         total_2012 = as.numeric(number_of_farms_2012),
+         total_2017 = as.numeric(number_of_farms_2017),
+         change_2002_2007 =as.numeric(change_in_number_of_farms_2002_2007), 
+         change_2007_2012 =as.numeric(change_in_number_of_farms_2007_2012),
+         change_2012_2017 =as.numeric(change_in_number_of_farms_2012_2017)
+  )
+
+glimpse(md_farms_and_inccome_v2)
+```
+**I want to see if median income is related to the number of farms, so I will do a scatter plot**
+```{r}
+md_farms_and_inccome_v2 |>
+  ggplot() +
+  geom_point(
+    mapping = aes(x=medincome, y= change_all))
+
+```
+
+**I don't see a clear correlation between median income and the increase or decrease of amount of farms, so I will create a map to see if there's an interesting story there**
+
+```{r}
+county_centroids <- st_centroid(counties_differences)
+ggplot()+
+  geom_sf(data = counties_differences, aes(fill=perc_diff))+
+            scale_colour_viridis_b(option="magma") +
+  theme_minimal()
 
 ```
