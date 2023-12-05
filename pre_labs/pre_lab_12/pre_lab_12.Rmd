@@ -147,7 +147,7 @@ Let's say we are interested in 2023, so all we need to do now is to store that f
 
 ### Task 5: Save one table from the HTML source
 
-**Task** Run the following code in the gray-colored codeblock below to extract all tables in the HTML and save it as a dataframe. What do you notice about the columns? **Answer**
+**Task** Run the following code in the gray-colored codeblock below to extract all tables in the HTML and save it as a dataframe. What do you notice about the columns? **Answer** The columns are the same as the website, we have the date and we have the press release. But the dataframe needs some cleaning up before we could actually use it. Particularly noticeable are the dates which are not in date format. 
 
 ```{r}
 # Read in all html from table, store all tables on page as nested list of dataframes.
@@ -170,7 +170,7 @@ From here, we can do a little cleaning. First we'll use clean_names() to lower t
 
 ### Task 6: Clean up the data
 
-**Task** Run the following code to extract the table we want, clean up the names and change the date column to an actual date. Look at the dataframe; what other information about these releases might you want to add? **Answer**
+**Task** Run the following code to extract the table we want, clean up the names and change the date column to an actual date. Look at the dataframe; what other information about these releases might you want to add? **Answer** When you inspect the table you see that it also contains an href to the actual press release. If there's anything else you might be able to add to the dataframe, I think it could be the URL to the actual site of the press release. 
 
 ```{r}
 # Read in all html from table, get the HTML table.
@@ -236,7 +236,7 @@ tags. What does the output suggest about how many
 
 <ul>
 
-tags there are in the HTML source? **Answer**
+tags there are in the HTML source? **Answer** The output suggest there are 122 tags in the HTML source. 
 
 ```{r}
 osp_results |> html_elements('li')
@@ -258,7 +258,7 @@ tags. To do that, we add `html_text()` to the end of the last code block:
 
 <li>
 
-tags. Describe the output: **Answer**
+tags. Describe the output: **Answer** The output shows each 'li" element and the <li>text within the elements </li>
 
 ```{r}
 osp_results |> html_elements('li') |> html_text()
@@ -268,7 +268,7 @@ Ok, so now we can see the press releases. But they are surrounded by a bunch of 
 
 ### Task 11: Turn the contents of the <li> tags into a dataframe 
 
-**Task** Run the following code in the gray-colored codeblock below to make a dataframe. Describe the output: **Answer**
+**Task** Run the following code in the gray-colored codeblock below to make a dataframe. Describe the output: **Answer** The output is a dataframe of those 122 "li" elements. There's only one variable, the "value," and the value is the text listed inside the "li" element.
 
 ```{r}
 releases <- osp_results |> html_elements('li') |> html_text() |> as_tibble()
