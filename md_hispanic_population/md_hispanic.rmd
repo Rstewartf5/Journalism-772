@@ -196,7 +196,624 @@ hispanic_pg_2018 <-get_acs(
   year=2018
 )
 ```
+```{r}
+variables <- c("B03002_012E", "NAME")
 
+cities <- c("Bowie city", "Laurel city", "Greenbelt city", "College Park city", "Morningside town")
+```
+
+```{r}
+pg_cities <- get_acs(
+  geography = "place", 
+  year = 2015,
+  variables = c(hispanic ="B01001I_001"),
+  state = "MD")
+
+```
+
+```{r} 
+pg_cities_2010 <- get_acs(
+  geography = "place", 
+  year = 2010,
+  variables = c(hispanic ="B01001I_001"),
+  state = "MD")
+
+pg_cities_2010_cleaned <- pg_cities_2010 |>
+  clean_names()|>
+  filter(name == "Laurel city, Maryland" | 
+           name == "Bowie city, Maryland" | 
+           name =="Greenbelt city, Maryland" |
+           name == "Berwyn Heights town, Maryland"|
+           name == "Bladensburg town, Maryland" |
+           name == "Brentwood town, Maryland" |
+           name == "Capitol Heights town, Maryland" | 
+           name == "Cheverly town, Maryland" |
+           name == "College Park city, Maryland"|
+           name == "Colmar Manor town, Maryland"|
+           name == "Cottage City town, Maryland"|
+           name == "District Heights city, Maryland"|
+           name == "Eagle Harbor town, Maryland" |
+           name == "Edmonston town, Maryland" |
+           name == "Fairmount Heights town, Maryland"|
+           name == "Forest Heights town, Maryland" |
+           name == "Glenarden city, Maryland"|
+           name == "Hyattsville city, Maryland"|
+           name == "Landover Hills town, Maryland" |
+           name == "Morningside town, Maryland" |
+           name == "Mount Rainier city, Maryland"|
+           name == "New Carrollton city, Maryland" |
+           name == "North Brentwood town, Maryland" |
+           name == "Riverdale Park town, Maryland" |
+           name == "Seat Pleasant city, Maryland" |
+           name == "University Park town, Maryland"|
+           name == "Upper Marlboro town, Maryland"
+        )|>
+  select(-moe, -variable)|>
+  rename(pop_2010 = estimate)
+  
+```
+
+```{r}
+pg_cities_2022 <- get_acs(
+  geography = "place", 
+  year = 2022,
+  variables = c(hispanic ="B01001I_001"),
+  state = "MD")
+
+pg_cities_2022_cleaned <- pg_cities_2022 |>
+  clean_names()|>
+  filter(name == "Laurel city, Maryland" | 
+           name == "Bowie city, Maryland" | 
+           name =="Greenbelt city, Maryland" |
+           name == "Berwyn Heights town, Maryland"|
+           name == "Bladensburg town, Maryland" |
+           name == "Brentwood town, Maryland" |
+           name == "Capitol Heights town, Maryland" | 
+           name == "Cheverly town, Maryland" |
+           name == "College Park city, Maryland"|
+           name == "Colmar Manor town, Maryland"|
+           name == "Cottage City town, Maryland"|
+           name == "District Heights city, Maryland"|
+           name == "Eagle Harbor town, Maryland" |
+           name == "Edmonston town, Maryland" |
+           name == "Fairmount Heights town, Maryland"|
+           name == "Forest Heights town, Maryland" |
+           name == "Glenarden city, Maryland"|
+           name == "Hyattsville city, Maryland"|
+           name == "Landover Hills town, Maryland" |
+           name == "Morningside town, Maryland" |
+           name == "Mount Rainier city, Maryland"|
+           name == "New Carrollton city, Maryland" |
+           name == "North Brentwood town, Maryland" |
+           name == "Riverdale Park town, Maryland" |
+           name == "Seat Pleasant city, Maryland" |
+           name == "University Park town, Maryland"|
+           name == "Upper Marlboro town, Maryland"
+        )|>
+  select(-moe, -variable)|>
+  rename(pop_2022 = estimate)
+
+```
+```{r}
+pg_cities_2009 <- get_acs(
+  geography = "place", 
+  year = 2009,
+  variables = c(hispanic ="B01001I_001"),
+  state = "MD")
+
+pg_cities_2009_cleaned <- pg_cities_2009 |>
+  clean_names()|>
+  filter(name == "Laurel city, Maryland" | 
+           name == "Bowie city, Maryland" | 
+           name =="Greenbelt city, Maryland" |
+           name == "Berwyn Heights town, Maryland"|
+           name == "Bladensburg town, Maryland" |
+           name == "Brentwood town, Maryland" |
+           name == "Capitol Heights town, Maryland" | 
+           name == "Cheverly town, Maryland" |
+           name == "College Park city, Maryland"|
+           name == "Colmar Manor town, Maryland"|
+           name == "Cottage City town, Maryland"|
+           name == "District Heights city, Maryland"|
+           name == "Eagle Harbor town, Maryland" |
+           name == "Edmonston town, Maryland" |
+           name == "Fairmount Heights town, Maryland"|
+           name == "Forest Heights town, Maryland" |
+           name == "Glenarden city, Maryland"|
+           name == "Hyattsville city, Maryland"|
+           name == "Landover Hills town, Maryland" |
+           name == "Morningside town, Maryland" |
+           name == "Mount Rainier city, Maryland"|
+           name == "New Carrollton city, Maryland" |
+           name == "North Brentwood town, Maryland" |
+           name == "Riverdale Park town, Maryland" |
+           name == "Seat Pleasant city, Maryland" |
+           name == "University Park town, Maryland"|
+           name == "Upper Marlboro town, Maryland"
+        )|>
+  select(-moe, -variable)|>
+  rename(pop_2009 = estimate)
+  
+```
+
+```{r}
+pg_cities_2011 <- get_acs(
+  geography = "place", 
+  year = 2011,
+  variables = c(hispanic ="B01001I_001"),
+  state = "MD")
+
+pg_cities_2011_cleaned <- pg_cities_2011 |>
+  clean_names()|>
+  filter(name == "Laurel city, Maryland" | 
+           name == "Bowie city, Maryland" | 
+           name =="Greenbelt city, Maryland" |
+           name == "Berwyn Heights town, Maryland"|
+           name == "Bladensburg town, Maryland" |
+           name == "Brentwood town, Maryland" |
+           name == "Capitol Heights town, Maryland" | 
+           name == "Cheverly town, Maryland" |
+           name == "College Park city, Maryland"|
+           name == "Colmar Manor town, Maryland"|
+           name == "Cottage City town, Maryland"|
+           name == "District Heights city, Maryland"|
+           name == "Eagle Harbor town, Maryland" |
+           name == "Edmonston town, Maryland" |
+           name == "Fairmount Heights town, Maryland"|
+           name == "Forest Heights town, Maryland" |
+           name == "Glenarden city, Maryland"|
+           name == "Hyattsville city, Maryland"|
+           name == "Landover Hills town, Maryland" |
+           name == "Morningside town, Maryland" |
+           name == "Mount Rainier city, Maryland"|
+           name == "New Carrollton city, Maryland" |
+           name == "North Brentwood town, Maryland" |
+           name == "Riverdale Park town, Maryland" |
+           name == "Seat Pleasant city, Maryland" |
+           name == "University Park town, Maryland"|
+           name == "Upper Marlboro town, Maryland"
+        )|>
+  select(-moe, -variable)|>
+  rename(pop_2011 = estimate)
+  
+```
+
+```{r}
+pg_cities_2012 <- get_acs(
+  geography = "place", 
+  year = 2012,
+  variables = c(hispanic ="B01001I_001"),
+  state = "MD")
+
+pg_cities_2012_cleaned <- pg_cities_2012 |>
+  clean_names()|>
+  filter(name == "Laurel city, Maryland" | 
+           name == "Bowie city, Maryland" | 
+           name =="Greenbelt city, Maryland" |
+           name == "Berwyn Heights town, Maryland"|
+           name == "Bladensburg town, Maryland" |
+           name == "Brentwood town, Maryland" |
+           name == "Capitol Heights town, Maryland" | 
+           name == "Cheverly town, Maryland" |
+           name == "College Park city, Maryland"|
+           name == "Colmar Manor town, Maryland"|
+           name == "Cottage City town, Maryland"|
+           name == "District Heights city, Maryland"|
+           name == "Eagle Harbor town, Maryland" |
+           name == "Edmonston town, Maryland" |
+           name == "Fairmount Heights town, Maryland"|
+           name == "Forest Heights town, Maryland" |
+           name == "Glenarden city, Maryland"|
+           name == "Hyattsville city, Maryland"|
+           name == "Landover Hills town, Maryland" |
+           name == "Morningside town, Maryland" |
+           name == "Mount Rainier city, Maryland"|
+           name == "New Carrollton city, Maryland" |
+           name == "North Brentwood town, Maryland" |
+           name == "Riverdale Park town, Maryland" |
+           name == "Seat Pleasant city, Maryland" |
+           name == "University Park town, Maryland"|
+           name == "Upper Marlboro town, Maryland"
+        )|>
+  select(-moe, -variable)|>
+  rename(pop_2012 = estimate)
+  
+```
+
+```{r}
+pg_cities_2013 <- get_acs(
+  geography = "place", 
+  year = 2013,
+  variables = c(hispanic ="B01001I_001"),
+  state = "MD")
+
+pg_cities_2013_cleaned <- pg_cities_2013 |>
+  clean_names()|>
+  filter(name == "Laurel city, Maryland" | 
+           name == "Bowie city, Maryland" | 
+           name =="Greenbelt city, Maryland" |
+           name == "Berwyn Heights town, Maryland"|
+           name == "Bladensburg town, Maryland" |
+           name == "Brentwood town, Maryland" |
+           name == "Capitol Heights town, Maryland" | 
+           name == "Cheverly town, Maryland" |
+           name == "College Park city, Maryland"|
+           name == "Colmar Manor town, Maryland"|
+           name == "Cottage City town, Maryland"|
+           name == "District Heights city, Maryland"|
+           name == "Eagle Harbor town, Maryland" |
+           name == "Edmonston town, Maryland" |
+           name == "Fairmount Heights town, Maryland"|
+           name == "Forest Heights town, Maryland" |
+           name == "Glenarden city, Maryland"|
+           name == "Hyattsville city, Maryland"|
+           name == "Landover Hills town, Maryland" |
+           name == "Morningside town, Maryland" |
+           name == "Mount Rainier city, Maryland"|
+           name == "New Carrollton city, Maryland" |
+           name == "North Brentwood town, Maryland" |
+           name == "Riverdale Park town, Maryland" |
+           name == "Seat Pleasant city, Maryland" |
+           name == "University Park town, Maryland"|
+           name == "Upper Marlboro town, Maryland"
+        )|>
+  select(-moe, -variable)|>
+  rename(pop_2013 = estimate)
+  
+```
+
+```{r}
+pg_cities_2014 <- get_acs(
+  geography = "place", 
+  year = 2014,
+  variables = c(hispanic ="B01001I_001"),
+  state = "MD")
+
+pg_cities_2014_cleaned <- pg_cities_2014 |>
+  clean_names()|>
+  filter(name == "Laurel city, Maryland" | 
+           name == "Bowie city, Maryland" | 
+           name =="Greenbelt city, Maryland" |
+           name == "Berwyn Heights town, Maryland"|
+           name == "Bladensburg town, Maryland" |
+           name == "Brentwood town, Maryland" |
+           name == "Capitol Heights town, Maryland" | 
+           name == "Cheverly town, Maryland" |
+           name == "College Park city, Maryland"|
+           name == "Colmar Manor town, Maryland"|
+           name == "Cottage City town, Maryland"|
+           name == "District Heights city, Maryland"|
+           name == "Eagle Harbor town, Maryland" |
+           name == "Edmonston town, Maryland" |
+           name == "Fairmount Heights town, Maryland"|
+           name == "Forest Heights town, Maryland" |
+           name == "Glenarden city, Maryland"|
+           name == "Hyattsville city, Maryland"|
+           name == "Landover Hills town, Maryland" |
+           name == "Morningside town, Maryland" |
+           name == "Mount Rainier city, Maryland"|
+           name == "New Carrollton city, Maryland" |
+           name == "North Brentwood town, Maryland" |
+           name == "Riverdale Park town, Maryland" |
+           name == "Seat Pleasant city, Maryland" |
+           name == "University Park town, Maryland"|
+           name == "Upper Marlboro town, Maryland"
+        )|>
+  select(-moe, -variable)|>
+  rename(pop_2014 = estimate)
+  
+```
+
+```{r}
+pg_cities_2015 <- get_acs(
+  geography = "place", 
+  year = 2015,
+  variables = c(hispanic ="B01001I_001"),
+  state = "MD")
+
+pg_cities_2015_cleaned <- pg_cities_2015 |>
+  clean_names()|>
+  filter(name == "Laurel city, Maryland" | 
+           name == "Bowie city, Maryland" | 
+           name =="Greenbelt city, Maryland" |
+           name == "Berwyn Heights town, Maryland"|
+           name == "Bladensburg town, Maryland" |
+           name == "Brentwood town, Maryland" |
+           name == "Capitol Heights town, Maryland" | 
+           name == "Cheverly town, Maryland" |
+           name == "College Park city, Maryland"|
+           name == "Colmar Manor town, Maryland"|
+           name == "Cottage City town, Maryland"|
+           name == "District Heights city, Maryland"|
+           name == "Eagle Harbor town, Maryland" |
+           name == "Edmonston town, Maryland" |
+           name == "Fairmount Heights town, Maryland"|
+           name == "Forest Heights town, Maryland" |
+           name == "Glenarden city, Maryland"|
+           name == "Hyattsville city, Maryland"|
+           name == "Landover Hills town, Maryland" |
+           name == "Morningside town, Maryland" |
+           name == "Mount Rainier city, Maryland"|
+           name == "New Carrollton city, Maryland" |
+           name == "North Brentwood town, Maryland" |
+           name == "Riverdale Park town, Maryland" |
+           name == "Seat Pleasant city, Maryland" |
+           name == "University Park town, Maryland"|
+           name == "Upper Marlboro town, Maryland"
+        )|>
+  select(-moe, -variable)|>
+  rename(pop_2015 = estimate)
+  
+```
+
+```{r}
+pg_cities_2016 <- get_acs(
+  geography = "place", 
+  year = 2016,
+  variables = c(hispanic ="B01001I_001"),
+  state = "MD")
+
+pg_cities_2016_cleaned <- pg_cities_2016 |>
+  clean_names()|>
+  filter(name == "Laurel city, Maryland" | 
+           name == "Bowie city, Maryland" | 
+           name =="Greenbelt city, Maryland" |
+           name == "Berwyn Heights town, Maryland"|
+           name == "Bladensburg town, Maryland" |
+           name == "Brentwood town, Maryland" |
+           name == "Capitol Heights town, Maryland" | 
+           name == "Cheverly town, Maryland" |
+           name == "College Park city, Maryland"|
+           name == "Colmar Manor town, Maryland"|
+           name == "Cottage City town, Maryland"|
+           name == "District Heights city, Maryland"|
+           name == "Eagle Harbor town, Maryland" |
+           name == "Edmonston town, Maryland" |
+           name == "Fairmount Heights town, Maryland"|
+           name == "Forest Heights town, Maryland" |
+           name == "Glenarden city, Maryland"|
+           name == "Hyattsville city, Maryland"|
+           name == "Landover Hills town, Maryland" |
+           name == "Morningside town, Maryland" |
+           name == "Mount Rainier city, Maryland"|
+           name == "New Carrollton city, Maryland" |
+           name == "North Brentwood town, Maryland" |
+           name == "Riverdale Park town, Maryland" |
+           name == "Seat Pleasant city, Maryland" |
+           name == "University Park town, Maryland"|
+           name == "Upper Marlboro town, Maryland"
+        )|>
+  select(-moe, -variable)|>
+  rename(pop_2016 = estimate)
+  
+```
+
+```{r}
+pg_cities_2017 <- get_acs(
+  geography = "place", 
+  year = 2017,
+  variables = c(hispanic ="B01001I_001"),
+  state = "MD")
+
+pg_cities_2017_cleaned <- pg_cities_2017 |>
+  clean_names()|>
+  filter(name == "Laurel city, Maryland" | 
+           name == "Bowie city, Maryland" | 
+           name =="Greenbelt city, Maryland" |
+           name == "Berwyn Heights town, Maryland"|
+           name == "Bladensburg town, Maryland" |
+           name == "Brentwood town, Maryland" |
+           name == "Capitol Heights town, Maryland" | 
+           name == "Cheverly town, Maryland" |
+           name == "College Park city, Maryland"|
+           name == "Colmar Manor town, Maryland"|
+           name == "Cottage City town, Maryland"|
+           name == "District Heights city, Maryland"|
+           name == "Eagle Harbor town, Maryland" |
+           name == "Edmonston town, Maryland" |
+           name == "Fairmount Heights town, Maryland"|
+           name == "Forest Heights town, Maryland" |
+           name == "Glenarden city, Maryland"|
+           name == "Hyattsville city, Maryland"|
+           name == "Landover Hills town, Maryland" |
+           name == "Morningside town, Maryland" |
+           name == "Mount Rainier city, Maryland"|
+           name == "New Carrollton city, Maryland" |
+           name == "North Brentwood town, Maryland" |
+           name == "Riverdale Park town, Maryland" |
+           name == "Seat Pleasant city, Maryland" |
+           name == "University Park town, Maryland"|
+           name == "Upper Marlboro town, Maryland"
+        )|>
+  select(-moe, -variable)|>
+  rename(pop_2017 = estimate)
+  
+```
+
+```{r}
+pg_cities_2018 <- get_acs(
+  geography = "place", 
+  year = 2018,
+  variables = c(hispanic ="B01001I_001"),
+  state = "MD")
+
+pg_cities_2018_cleaned <- pg_cities_2018 |>
+  clean_names()|>
+  filter(name == "Laurel city, Maryland" | 
+           name == "Bowie city, Maryland" | 
+           name =="Greenbelt city, Maryland" |
+           name == "Berwyn Heights town, Maryland"|
+           name == "Bladensburg town, Maryland" |
+           name == "Brentwood town, Maryland" |
+           name == "Capitol Heights town, Maryland" | 
+           name == "Cheverly town, Maryland" |
+           name == "College Park city, Maryland"|
+           name == "Colmar Manor town, Maryland"|
+           name == "Cottage City town, Maryland"|
+           name == "District Heights city, Maryland"|
+           name == "Eagle Harbor town, Maryland" |
+           name == "Edmonston town, Maryland" |
+           name == "Fairmount Heights town, Maryland"|
+           name == "Forest Heights town, Maryland" |
+           name == "Glenarden city, Maryland"|
+           name == "Hyattsville city, Maryland"|
+           name == "Landover Hills town, Maryland" |
+           name == "Morningside town, Maryland" |
+           name == "Mount Rainier city, Maryland"|
+           name == "New Carrollton city, Maryland" |
+           name == "North Brentwood town, Maryland" |
+           name == "Riverdale Park town, Maryland" |
+           name == "Seat Pleasant city, Maryland" |
+           name == "University Park town, Maryland"|
+           name == "Upper Marlboro town, Maryland"
+        )|>
+  select(-moe, -variable)|>
+  rename(pop_2018 = estimate)
+  
+```
+
+```{r}
+pg_cities_2019 <- get_acs(
+  geography = "place", 
+  year = 2019,
+  variables = c(hispanic ="B01001I_001"),
+  state = "MD")
+
+pg_cities_2019_cleaned <- pg_cities_2019 |>
+  clean_names()|>
+  filter(name == "Laurel city, Maryland" | 
+           name == "Bowie city, Maryland" | 
+           name =="Greenbelt city, Maryland" |
+           name == "Berwyn Heights town, Maryland"|
+           name == "Bladensburg town, Maryland" |
+           name == "Brentwood town, Maryland" |
+           name == "Capitol Heights town, Maryland" | 
+           name == "Cheverly town, Maryland" |
+           name == "College Park city, Maryland"|
+           name == "Colmar Manor town, Maryland"|
+           name == "Cottage City town, Maryland"|
+           name == "District Heights city, Maryland"|
+           name == "Eagle Harbor town, Maryland" |
+           name == "Edmonston town, Maryland" |
+           name == "Fairmount Heights town, Maryland"|
+           name == "Forest Heights town, Maryland" |
+           name == "Glenarden city, Maryland"|
+           name == "Hyattsville city, Maryland"|
+           name == "Landover Hills town, Maryland" |
+           name == "Morningside town, Maryland" |
+           name == "Mount Rainier city, Maryland"|
+           name == "New Carrollton city, Maryland" |
+           name == "North Brentwood town, Maryland" |
+           name == "Riverdale Park town, Maryland" |
+           name == "Seat Pleasant city, Maryland" |
+           name == "University Park town, Maryland"|
+           name == "Upper Marlboro town, Maryland"
+        )|>
+  select(-moe, -variable)|>
+  rename(pop_2019 = estimate)
+  
+```
+
+```{r}
+pg_cities_2020 <- get_acs(
+  geography = "place", 
+  year = 2020,
+  variables = c(hispanic ="B01001I_001"),
+  state = "MD")
+
+pg_cities_2020_cleaned <- pg_cities_2020 |>
+  clean_names()|>
+  filter(name == "Laurel city, Maryland" | 
+           name == "Bowie city, Maryland" | 
+           name =="Greenbelt city, Maryland" |
+           name == "Berwyn Heights town, Maryland"|
+           name == "Bladensburg town, Maryland" |
+           name == "Brentwood town, Maryland" |
+           name == "Capitol Heights town, Maryland" | 
+           name == "Cheverly town, Maryland" |
+           name == "College Park city, Maryland"|
+           name == "Colmar Manor town, Maryland"|
+           name == "Cottage City town, Maryland"|
+           name == "District Heights city, Maryland"|
+           name == "Eagle Harbor town, Maryland" |
+           name == "Edmonston town, Maryland" |
+           name == "Fairmount Heights town, Maryland"|
+           name == "Forest Heights town, Maryland" |
+           name == "Glenarden city, Maryland"|
+           name == "Hyattsville city, Maryland"|
+           name == "Landover Hills town, Maryland" |
+           name == "Morningside town, Maryland" |
+           name == "Mount Rainier city, Maryland"|
+           name == "New Carrollton city, Maryland" |
+           name == "North Brentwood town, Maryland" |
+           name == "Riverdale Park town, Maryland" |
+           name == "Seat Pleasant city, Maryland" |
+           name == "University Park town, Maryland"|
+           name == "Upper Marlboro town, Maryland"
+        )|>
+  select(-moe, -variable)|>
+  rename(pop_2020 = estimate)
+  
+```
+
+```{r}
+pg_cities_2021 <- get_acs(
+  geography = "place", 
+  year = 2021,
+  variables = c(hispanic ="B01001I_001"),
+  state = "MD")
+
+pg_cities_2021_cleaned <- pg_cities_2021 |>
+  clean_names()|>
+  filter(name == "Laurel city, Maryland" | 
+           name == "Bowie city, Maryland" | 
+           name =="Greenbelt city, Maryland" |
+           name == "Berwyn Heights town, Maryland"|
+           name == "Bladensburg town, Maryland" |
+           name == "Brentwood town, Maryland" |
+           name == "Capitol Heights town, Maryland" | 
+           name == "Cheverly town, Maryland" |
+           name == "College Park city, Maryland"|
+           name == "Colmar Manor town, Maryland"|
+           name == "Cottage City town, Maryland"|
+           name == "District Heights city, Maryland"|
+           name == "Eagle Harbor town, Maryland" |
+           name == "Edmonston town, Maryland" |
+           name == "Fairmount Heights town, Maryland"|
+           name == "Forest Heights town, Maryland" |
+           name == "Glenarden city, Maryland"|
+           name == "Hyattsville city, Maryland"|
+           name == "Landover Hills town, Maryland" |
+           name == "Morningside town, Maryland" |
+           name == "Mount Rainier city, Maryland"|
+           name == "New Carrollton city, Maryland" |
+           name == "North Brentwood town, Maryland" |
+           name == "Riverdale Park town, Maryland" |
+           name == "Seat Pleasant city, Maryland" |
+           name == "University Park town, Maryland"|
+           name == "Upper Marlboro town, Maryland"
+        )|>
+  select(-moe, -variable)|>
+  rename(pop_2021 = estimate)
+  
+```
+
+```{r}
+prince_georges_since_2009 <- pg_cities_2009_cleaned|> left_join(pg_cities_2010_cleaned)|>
+  left_join(pg_cities_2011_cleaned)|>
+  left_join(pg_cities_2012_cleaned)|>
+  left_join(pg_cities_2013_cleaned)|>
+  left_join(pg_cities_2014_cleaned)|>
+  left_join(pg_cities_2015_cleaned)|>
+  left_join(pg_cities_2016_cleaned)|>
+  left_join(pg_cities_2017_cleaned)|>
+  left_join(pg_cities_2018_cleaned)|>
+  left_join(pg_cities_2019_cleaned)|>
+  left_join(pg_cities_2020_cleaned)|>
+  left_join(pg_cities_2021_cleaned)|>
+  left_join(pg_cities_2022_cleaned)
+
+```
 
 ```{r}
 #pulling up Iranian population
