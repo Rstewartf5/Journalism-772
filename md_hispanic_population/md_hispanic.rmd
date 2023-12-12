@@ -27,11 +27,17 @@ census_api_key("a01180b6ecfc93e467a23a8b66d5dca6d8c5c5df", install = TRUE)
 ```
 
 ```{r}
-#loading the ACS5 dataset from the 2010 census
+#loading the ACS5 dataset from the 2020 census
 
 v20 <- load_variables(2020, "acs5", cache = TRUE)
 View(v20)
 
+```
+
+```{r}
+sf1 <- load_variables(2000, "sf1", cache = TRUE)
+
+p00 <- get_decennial(geography = "place", variables = "P004002", year = 2000)
 ```
 
 ```{r}
@@ -831,5 +837,14 @@ write_csv(iranian_population, file ="data/iranian_population.csv")
 #loading census data from 1995
 
 sf1 <- load_variables(2000, "sf1", cache = TRUE)
+
+```
+
+
+```{r}
+md_covid <- read_csv("data/md_covid_cases_2021.csv")
+
+```
+
 
 ```

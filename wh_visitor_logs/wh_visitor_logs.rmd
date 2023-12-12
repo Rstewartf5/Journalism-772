@@ -160,7 +160,15 @@ wh_records_combined_dates_and_names_wo_extra
 
 #Question 2: Who gets the most visitors? 
 
-Answer: Outside of the president, the three individuals who receive the most visitors are Ed Teleky (Director of Ceremonies at the White House), Gionelly Mills (Staff Assistant focusing on Communications, Celebrity Engagement, and Events at the White House), and Lydia Hecmanczuk (IT Specialist in the Executive Office of the President). 
+Answer: When you take away staff that would generally deal with the public the top five White House officials in order of number of visits received are: VPOTUS(4306 visits)  this is Kamala Harris 
+FLOTUS (1905 visits) this is First Lady, Jill Biden 
+
+Tarun Chhabra (1853 visits) Tarun served on the White House National Security Council staff as Director for Strategic Planning and Director for Human Rights and National Security Issues, according to his bio at the Center for Security and Emerging Technology. 
+
+Claudia Marconi (1657 visit) Claudia Marconi is White House Senior Advisor for Congressional Engagement. She  in charge of all the logistical details of Members of Congress’ engagement for events and meetings at the White House, and travel with the President and First Lady.
+
+John Finer (1432  visits) – Finer is the Principal Deputy National Security Advisor at the White House. He previously served as Chief of Staff and Director of Policy Planning at the U.S. Department of State, according to his bio on 
+ 
 ```{r}
 
 #refining the visitee record using open refine
@@ -220,18 +228,236 @@ wh_records_combined_dates_and_names_wo_extra_mutated |>
   arrange(desc(count_visits))
 
 ```
+**Question 5: how frequently does house or senate leadership visit the WH? A better question is what percentage of the logged visits are from leaders of the house or senate. We haven't thoroughly investigated this question yet, but we believe that we could create a list of names of high-ranking leadership: speaker of the house, minority whip, etc., and write a code using string detect and mutate to create a column that will be marked as yes if the entry is from a member of the house/senate leadership, and no if it is not.**
 
-#Question 5: How frequently does House or Senate leadership visit the white house?  Brigette 
+Senate: 
+D- Patty Murray, Chuck Shumer, Dick Durbin, Elizabeth Warren, Mark Warner 
+R- Mitch McConnell, John Thune, John Barrasso, Ernst Joni, Shelley Moore Capito, Steve Daines
 
-Answer: 
+House: 
+D- Hakeem Jeffries, Katherine Clark, Pete Aguilar, James Clyburn 
+R- Mike Johnson, Steve Svalise, Tom Emmer, Elise Stenfanik, Gary Palmer
 
+Stefanik and Emmer and Palmer did not visit the white house at al
 ```{r}
-wh_records_last_names <- wh_records_combined_dates_and_names |>
-wh_records_leadership <- wh_records_names|>
+#condensing the name of the starting df 
+leadership <- wh_records_combined_dates_and_names_wo_extra
+
+#all of the visits by leadership
+filtered_leadership <- leadership|>
   filter(full_names_visitor %in% c("PATTY_L_MURRAY","RICHARD_J_DURBIN","CHARLES_N_SCHUMER","ELIZABETH_N_WARREN","MARK_R_WARNER","ADDISON_M_MCCONNELL","JOHN_R_THUNE","KATHERINE_C_PHILLIPSBARRASSO","SHELLEY_M_CAPITO", "STEVE_J_SCALISE","HAKEEM_N_JEFFRIES","KATHERINE_M_CLARK","PETER_R_AGUILAR", "JAMES_E_CLYBURN","JAMES_M_JOHNSON","EMMER","STEFANIK", "PALMER"))
 
+#tally of how many times leadership visits
+tally_leadership <- filtered_leadership |>
+   group_by(full_names_visitor) |>
+  summarize(count = n())
+#bar chart for who visits the most
+tally_leadership |>
+  ggplot() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  geom_bar(aes(x=full_names_visitor, weight=count)) +
+  labs(
+    title="Congressional Leadership Visits to White House",
+    x = "name",
+    y = "visits",
+    caption = "source: White House"
+  )
+  
+```
+Added question- Who visited/was visited early and late?
+```{r}
+#people who were visited very early or very late (I took this to mean outside of working hours)
+
+#before 9 am, no visitors from hour 2 or hour 3
+
+hour_1_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 1)|> 
+  count(full_names_visitee) |> 
+  arrange(desc(n))
+
+hour_4_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 4)|> 
+  count(full_names_visitee) |> 
+  arrange(desc(n))
+
+hour_5_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 5)|> 
+  count(full_names_visitee) |> 
+  arrange(desc(n))
+
+hour_6_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 6)|> 
+  count(full_names_visitee) |> 
+  arrange(desc(n))
+
+hour_7_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 7)|> 
+  count(full_names_visitee) |> 
+  arrange(desc(n))
+
+hour_8_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 8)|> 
+  count(full_names_visitee) |> 
+  arrange(desc(n))
+
+#5 pm and after/17:00 and after
+
+hour_17_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 17)|> 
+  count(full_names_visitee) |> 
+  arrange(desc(n))
+
+hour_18_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 18)|> 
+  count(full_names_visitee) |> 
+  arrange(desc(n))
+
+hour_19_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 19)|> 
+  count(full_names_visitee) |> 
+  arrange(desc(n))
+
+hour_20_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 20)|> 
+  count(full_names_visitee) |> 
+  arrange(desc(n))
+
+hour_21_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 21)|> 
+  count(full_names_visitee) |> 
+  arrange(desc(n))
+
+hour_22_wh <- wh_records_combined_dates_and_names_wo_extra_mutated|> 
+  group_by(hour) |> 
+  filter(hour == 22)|> 
+  count(full_names_visitee) |> 
+  arrange(desc(n))
+
+hour_23_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 23)|> 
+  count(full_names_visitee) |> 
+  arrange(desc(n))
+
+##hour 8 has the most people visited, Ed Teleky has most visitors off hours
+```
+
+```{r}
+#people who are a visitor very early or very late (I took this to mean outside of working hours)
+
+#before 9 am, no visitors from hour 2 or hour 3
+
+visitor_hour_1_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 1)|> 
+  count(full_names_visitor) |> 
+  arrange(desc(n))
+
+visitor_hour_2_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 2)|> 
+  count(full_names_visitor) |> 
+  arrange(desc(n))
+
+visitor_hour_3_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 3)|> 
+  count(full_names_visitor) |> 
+  arrange(desc(n))
+
+visitor_hour_4_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 4)|> 
+  count(full_names_visitor) |> 
+  arrange(desc(n))
+
+visitor_hour_5_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 5)|> 
+  count(full_names_visitor) |> 
+  arrange(desc(n))
+
+visitor_hour_6_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 6)|> 
+  count(full_names_visitor) |> 
+  arrange(desc(n))
+
+visitor_hour_7_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 7)|> 
+  count(full_names_visitor) |> 
+  arrange(desc(n))
+
+visitor_hour_8_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 8)|> 
+  count(full_names_visitor) |> 
+  arrange(desc(n))
+
+#5 pm and after/17:00 and after
+
+visitor_hour_17_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 17)|> 
+  count(full_names_visitor) |> 
+  arrange(desc(n))
+
+visitor_hour_18_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 18)|> 
+  count(full_names_visitor) |> 
+  arrange(desc(n))
+
+visitor_hour_19_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 19)|> 
+  count(full_names_visitor) |> 
+  arrange(desc(n))
+
+visitor_hour_20_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 20)|> 
+  count(full_names_visitor) |> 
+  arrange(desc(n))
+
+visitor_hour_21_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 21)|> 
+  count(full_names_visitor) |> 
+  arrange(desc(n))
+
+visitor_hour_22_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 22)|> 
+  count(full_names_visitor) |> 
+  arrange(desc(n))
+
+visitor_hour_23_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |> 
+  group_by(hour) |> 
+  filter(hour == 23)|> 
+  count(full_names_visitor) |> 
+  arrange(desc(n))
+
+#hour 8 has the most v
 
 ```
+
+***Final Milestone Discussion ***
+
+
+
 
 ***Milestone 3 Discussion***
 
