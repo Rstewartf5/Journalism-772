@@ -455,7 +455,7 @@ visitor_hour_23_wh <- wh_records_combined_dates_and_names_wo_extra_mutated |>
 ```
 
 ***Final Milestone Discussion ***
-
+Pitch : Office hours for a normal job are commonly referred to as a “nine-to-five" operation. But running the county means working all hours. Still, for the White House to take a meeting late into the night the visit may signify notable importance. In our analysis of White House visitor logs between January 2022 and June 2023 we uncovered 933 meetings taking place between the hours of 9:00 p.m. and 2:00 a.m. Who are the most frequent visitors skulking through the White House during the dead of night and what could be so important it can’t wait until the morning? This story will examine the nightly activities of the Biden White House. To make the story better, we would need journalistic access to the people coming and going from the building.
 
 
 
